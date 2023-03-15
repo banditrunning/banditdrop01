@@ -1,10 +1,18 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { useGLTF } from "@react-three/drei";
 import { Box3, Vector3 } from "three";
 import { useSphere } from "@react-three/cannon";
+import { useFrame } from "@react-three/fiber";
 
-const Model = (props) => {
+const Model = ({ onCollide, ...props }) => {
   const { nodes, materials } = useGLTF("../models/Football.glb");
+
+  useFrame(({ scene }) => {
+    if (ref.current) {
+      // Update the mesh rotation to match the physics body rotation
+      ref.current.rotation.copy(ref.current.children[0].quaternion);
+    }
+  });
 
   // Calculate the bounding box of the mesh
   const box = new Box3().setFromObject(nodes.Solid);
@@ -18,13 +26,25 @@ const Model = (props) => {
   box.getCenter(center);
 
   // Add physics to the model
-  const [ref] = useSphere(() => ({
+  const [ref, api] = useSphere(() => ({
     mass: 1,
     position: [0, 5, 0],
     args: [size.length() / 2],
-    material: { restitution: 1 }, // Adjust this value to control the ball's bounciness
+    material: { restitution: 1 },
     ...props,
   }));
+
+  useEffect(() => {
+    if (ref.current && onCollide) {
+      ref.current.addEventListener("collide", (e) => onCollide(e, ref));
+    }
+
+    return () => {
+      if (ref.current && onCollide) {
+        ref.current.removeEventListener("collide", (e) => onCollide(e, ref));
+      }
+    };
+  }, [ref, onCollide]);
 
   return (
     <group
