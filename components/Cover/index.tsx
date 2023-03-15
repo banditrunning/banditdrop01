@@ -89,6 +89,6 @@ const Cover = () => {
       `}</style>
       <BallGame />
     </>
-  );
+  )
 };
 export default Cover;
