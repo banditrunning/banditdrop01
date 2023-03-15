@@ -67,7 +67,7 @@ const Cover = () => {
           delay={3}
         >
           {Array(19)
-            .fill()
+            .fill(19, 0, 19)
             .map((_, index) => (
               <MarqueeMessage key={index} />
             ))}
