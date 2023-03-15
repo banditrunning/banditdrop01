@@ -8,8 +8,40 @@ import { useControls } from "@react-three/drei";
 import { extend, useThree, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { useRef } from "react";
-
+import { useEffect, useState } from "react";
 extend({ OrbitControls });
+
+const Ground = (props) => {
+  const [positionY, setPositionY] = useState(-2.75);
+
+  useEffect(() => {
+    const setGroundPosition = () => {
+      const aspectRatio = window.innerWidth / window.innerHeight;
+      setPositionY(-aspectRatio * 3);
+    };
+
+    setGroundPosition();
+    window.addEventListener("resize", setGroundPosition);
+
+    return () => {
+      window.removeEventListener("resize", setGroundPosition);
+    };
+  }, []);
+
+  const [ref] = usePlane(() => ({
+    rotation: [-Math.PI / 2, 0, 0],
+    position: [0, positionY, 0],
+    material: { restitution: 0.6 },
+    ...props,
+  }));
+
+  return (
+    <mesh ref={ref} receiveShadow>
+      <planeBufferGeometry attach="geometry" args={[100, 100]} />
+      <shadowMaterial attach="material" transparent opacity={0.5} />
+    </mesh>
+  );
+};
 
 const CameraControls = () => {
   const {
@@ -26,28 +58,23 @@ const CameraControls = () => {
       args={[camera, domElement]}
       enableZoom={false}
       enablePan={false}
+      enableRotate={false}
       target={[0, 0, 0]}
       autoRotate={false}
     />
   );
 };
 
-const Ground = (props) => {
-  const [ref] = usePlane(() => ({
-    rotation: [-Math.PI / 2, 0, 0],
-    material: { restitution: 0.6 }, // Adjust this value to control the ground's bounciness
-    ...props,
-  }));
-
-  return (
-    <mesh ref={ref} receiveShadow>
-      <planeBufferGeometry attach="geometry" args={[100, 100]} />
-      <shadowMaterial attach="material" transparent opacity={0.5} />
-    </mesh>
-  );
-};
-
 const BallGame = () => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return null;
+  }
   return (
     <div
       style={{
@@ -63,7 +90,14 @@ const BallGame = () => {
         width: "100%",
       }}
     >
-      <Canvas camera={{ position: [0, 0, 3], fov: 50 }} shadows>
+      <Canvas
+        camera={{
+          position: [0, 0, 3],
+          fov: 50,
+          aspect: isClient ? window.innerWidth / window.innerHeight : 1,
+        }}
+        shadows
+      >
         <spotLight
           position={[0, 20, 10]}
           intensity={1}
