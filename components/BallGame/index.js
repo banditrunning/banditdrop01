@@ -75,6 +75,22 @@ const BallGame = () => {
   if (!isClient) {
     return null;
   }
+
+  const cameraPosition = [0, 0, 3];
+  const fov = 50;
+  const aspect = isClient ? window.innerWidth / window.innerHeight : 1;
+
+  // Calculate the distance from the camera to the bottom border
+  const distanceToBottom =
+    Math.tan(((90 - fov / 2) * Math.PI) / 180) * cameraPosition[2];
+
+  // Calculate the y-coordinate of the ground
+  const groundY = distanceToBottom * aspect;
+
+  // Position the ground slightly above the bottom border
+  const offsetY = 1; // Adjust this value to control how far above the bottom border the ground should be
+  const groundPosition = [0, -groundY + offsetY, 0];
+
   return (
     <div
       style={{
@@ -111,7 +127,7 @@ const BallGame = () => {
         <Suspense fallback={null}>
           <Physics gravity={[0, -10, 0]}>
             <Model position={[0, 3, 0]} />
-            <Ground position={[0, -2.75, 0]} />
+            <Ground position={groundPosition} />
           </Physics>
           <Environment preset="city" background={false} />
         </Suspense>
