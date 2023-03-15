@@ -1,8 +1,9 @@
 import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { Box3, Vector3 } from "three";
+import { useSphere } from "@react-three/cannon";
 
-const Model = () => {
+const Model = (props) => {
   const { nodes, materials } = useGLTF("../models/Football.glb");
 
   // Calculate the bounding box of the mesh
@@ -16,11 +17,21 @@ const Model = () => {
   const center = new Vector3();
   box.getCenter(center);
 
+  // Add physics to the model
+  const [ref] = useSphere(() => ({
+    mass: 1,
+    position: [0, 5, 0],
+    args: [size.length() / 2],
+    material: { restitution: 0.6 }, // Adjust this value to control the ball's bounciness
+    ...props,
+  }));
+
   return (
     <group
+      ref={ref}
       dispose={null}
       position={[-center.x, -center.y, -center.z]}
-      scale={[0.1, 0.1, 0.1]}
+      scale={[0.3, 0.3, 0.3]}
     >
       <group position={[0, 0, -0.01]} rotation={[-Math.PI, 0, -Math.PI]}>
         <mesh
