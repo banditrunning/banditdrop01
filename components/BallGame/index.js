@@ -88,7 +88,7 @@ const BallGame = () => {
   const groundY = distanceToBottom * aspect;
 
   // Position the ground slightly above the bottom border
-  const offsetY = 1; // Adjust this value to control how far above the bottom border the ground should be
+  const offsetY = 1.3; // Adjust this value to control how far above the bottom border the ground should be
   const groundPosition = [0, -groundY + offsetY, 0];
 
   return (
