@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  background-color: #000000;
+}
+@font-face {
+  font-family: "grotesk-regular";
+  src: url("../public/fonts/tomato-grotesk-regular.otf");
+}
+@font-face {
+  font-family: "grotesk-medium";
+  src: url("../public/fonts/tomato-grotesk-medium.otf");
+}
+@font-face {
+  font-family: "grotesk-bold";
+  src: url("../public/fonts/tomato-grotesk-semibold.otf");
+}
