@@ -22,7 +22,7 @@ const Model = (props) => {
     mass: 1,
     position: [0, 5, 0],
     args: [size.length() / 2],
-    material: { restitution: 0.6 }, // Adjust this value to control the ball's bounciness
+    material: { restitution: 1 }, // Adjust this value to control the ball's bounciness
     ...props,
   }));
 
