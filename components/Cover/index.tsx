@@ -51,7 +51,7 @@ const Cover = () => {
             : "opacity-0"
         }`}
       >
-        <div>How's</div>
+        <div>How&apos;s</div>
         <div>Your</div>
         <div>Juggle?</div>
       </div>
