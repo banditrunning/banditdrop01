@@ -73,7 +73,9 @@ const Cover = () => {
             }
           }
         `}</style>
-        <BallGame onClick={handleScreenTap} />
+        <div onClick={handleScreenTap}>
+          <BallGame />
+        </div>
       </>
     );
   };
