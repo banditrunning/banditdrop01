@@ -4,7 +4,7 @@ import { Box3, Vector3 } from "three";
 import { useSphere } from "@react-three/cannon";
 import { useFrame } from "@react-three/fiber";
 
-const Model = ({ onCollide, ...props }) => {
+const BlackBallModel = ({ onCollide, ...props }) => {
   const { nodes, materials } = useGLTF("../models/Football.glb");
 
   useFrame(({ scene }) => {
@@ -62,13 +62,13 @@ const Model = ({ onCollide, ...props }) => {
           castShadow
           receiveShadow
           geometry={nodes.Solid.geometry}
-          material={materials.White}
+          material={materials.Black}
         />
         <mesh
           castShadow
           receiveShadow
           geometry={nodes.Solid_1.geometry}
-          material={materials.White}
+          material={materials.Black}
         />
         <mesh
           castShadow
@@ -82,4 +82,4 @@ const Model = ({ onCollide, ...props }) => {
 };
 
 useGLTF.preload("../models/Football.glb");
-export default Model;
+export default BlackBallModel;

@@ -80,32 +80,38 @@ const ThreeScene = ({ isClient }) => {
   const offsetY = 1.6;
   const groundPosition = [0, -groundY + offsetY, 0];
 
-  const handleCollision = useCallback((e, modelRef) => {
+  const [constantRotation, setConstantRotation] = useState(
+    new THREE.Vector3(0, 0, 0)
+  );
+
+  const handleCollision = useCallback((e, meshRef) => {
     const contact = e.contact;
 
-    if (!contact || !modelRef.current) {
+    if (!contact || !meshRef) {
       return;
     }
 
     const contactNormal = contact.normal;
     const contactPoint = contact.contactPoint;
 
-    modelRef.current.applyImpulse(
+    meshRef.parent.applyImpulse(
       contactNormal.clone().multiplyScalar(100),
       contactPoint
     );
 
     // Generate random angular velocity values
     const randomAngularVelocity = new THREE.Vector3(
-      Math.random() * 10 - 5,
-      Math.random() * 10 - 5,
-      Math.random() * 10 - 5
+      Math.random() * 20 - 10,
+      Math.random() * 20 - 10,
+      Math.random() * 20 - 10
     );
 
-    // Apply random angular velocity to the ball
-    modelRef.setAngularVelocity(randomAngularVelocity);
-  }, []);
+    // Set the constant rotation value
+    setConstantRotation(randomAngularVelocity);
 
+    // Apply random angular velocity to the ball
+    meshRef.parent.setAngularVelocity(randomAngularVelocity);
+  }, []);
   return (
     <div
       style={{
@@ -140,8 +146,13 @@ const ThreeScene = ({ isClient }) => {
         <ambientLight intensity={0.1} />
         <directionalLight intensity={0.1} />
         <Suspense fallback={null}>
-          <Physics gravity={[0, -10, 0]}>
-            <Model position={[0, 3, 0]} onCollide={handleCollision} />
+          <Physics gravity={[0, -15, 0]}>
+            <Model
+              position={[0, 3, 0]}
+              onCollide={handleCollision}
+              constantRotation={constantRotation}
+            />
+
             <Ground position={groundPosition} />
           </Physics>
           <Environment preset="city" background={false} />
