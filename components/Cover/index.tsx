@@ -183,7 +183,7 @@ const Cover = () => {
               : "opacity-0"
           }`}
         >
-          <div>Don't</div>
+          <div>Don&apos;t</div>
           <div>Let It</div>
           <div>Drop</div>
         </div>
