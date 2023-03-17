@@ -115,7 +115,7 @@ const Cover = () => {
           }`}
         >
           <button
-            className="relative uppercase text-white font-GroteskRegular text-2xl bg-[#C97900] w-full flex flex-row items-center justify-center py-2 rounded-md]"
+            className="relative uppercase text-white font-GroteskRegular text-2xl bg-[#C97900] w-full flex flex-row items-center justify-center py-2 rounded-md"
             onClick={handlePlayTap}
           >
             Play <LeftArrow />

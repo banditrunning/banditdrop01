@@ -6,7 +6,7 @@ const LeftArrow = ({ size = 20 }) => (
     height={(size * 17) / 18}
     viewBox="0 0 18 17"
     fill="none"
-    className="rotate-180 pr-1"
+    className={`rotate-180 pr-1 transition-opacity duration-100 ease-in-out hover:cursor-pointer opacity-1 active:opacity-50`}
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
