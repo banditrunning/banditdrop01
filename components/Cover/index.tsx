@@ -3,6 +3,7 @@ import { useEffect, useState, useContext } from "react";
 import BallGame from "../BallGame";
 import GameContext from "@/context";
 import LeftArrow from "../LeftArrow";
+import BallSelection from "../BallSelection";
 
 const Cover = () => {
   const Home: React.FC = () => {
@@ -75,6 +76,7 @@ const Cover = () => {
           }
         `}</style>
         <div onClick={handleScreenTap}></div>
+        <BallGame />
       </>
     );
   };
@@ -86,22 +88,13 @@ const Cover = () => {
     useEffect(() => {
       const fadeInTimeout = setTimeout(() => {
         setShowContent(true);
-      }, 1000); // adjust this value as needed for the desired fade-in duration
-      const marqueeTimeout = setTimeout(() => {
-        setShowMarquee(true);
-      }, 2000); // adjust this value as needed for the desired slide-up duration
+      }, 0); // adjust this value as needed for the desired fade-in duration
 
       return () => {
         clearTimeout(fadeInTimeout);
-        clearTimeout(marqueeTimeout);
       };
     }, []);
 
-    const MarqueeMessage = () => (
-      <span className="px-2 flex flex-row justify-between items-center text-2xl">
-        TAP TO START <LeftArrow />
-      </span>
-    );
     return (
       <>
         <div
@@ -128,6 +121,8 @@ const Cover = () => {
             Play <LeftArrow />
           </button>
         </div>
+
+        <BallSelection />
       </>
     );
   };
@@ -158,15 +153,14 @@ const Cover = () => {
     return (
       <>
         <div
-          className={`font-GroteskRegular text-white uppercase text-7xl leading-[3.9rem] py-4 ${
+          className={`font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 ${
             showContent
               ? "opacity-100 transition-opacity duration-1000 ease-in"
               : "opacity-0"
           }`}
         >
-          <div>Don&apos;t</div>
-          <div>Let It</div>
-          <div>Drop</div>
+          <div>Don&apos;t Let</div>
+          <div>It Drop</div>
         </div>
         <div
           className={`w-full fixed bottom-[-100%] left-0 right-0 ${
@@ -218,7 +212,6 @@ const Cover = () => {
 
   return (
     <div>
-      <BallGame />
       {gameState === "home" && <Home />}
       {gameState === "selection" && <Selection />}
       {gameState === "gameplay" && <Gameplay />}

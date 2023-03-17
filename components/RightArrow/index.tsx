@@ -1,7 +1,7 @@
-const RightArrow = () => (
+const RightArrow = ({ size = 20 }) => (
   <svg
-    width="20"
-    height="19"
+    width={size}
+    height={(size * 17) / 18}
     viewBox="0 0 18 17"
     fill="none"
     className="pr-1"

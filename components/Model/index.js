@@ -92,7 +92,7 @@ const Model = ({ position, onCollide, ...props }) => {
           castShadow
           receiveShadow
           geometry={nodes.Solid_1.geometry}
-          material={materials.White}
+          material={materials.Black}
         />
         <mesh
           castShadow

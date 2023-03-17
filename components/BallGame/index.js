@@ -224,6 +224,7 @@ const ThreeScene = ({ isClient }) => {
         position: "absolute",
         top: "0",
         left: "0",
+
         right: "0",
         bottom: "0",
         width: "100%",
@@ -232,7 +233,7 @@ const ThreeScene = ({ isClient }) => {
     >
       <Canvas
         camera={{
-          position: [0, 0, 3],
+          position: cameraPosition,
           fov: 50,
           aspect: isClient ? window.innerWidth / window.innerHeight : 1,
         }}

@@ -1,109 +1,97 @@
-import React, { useRef, useEffect, useContext } from "react";
-import { useGLTF } from "@react-three/drei";
-import { Box3, Vector3 } from "three";
-import { useSphere } from "@react-three/cannon";
-import { useFrame } from "@react-three/fiber";
-import GameContext from "@/context";
+import React, { useState } from "react";
+import { Canvas } from "@react-three/fiber";
+import Model from "/components/Model";
+import BlackBallModel from "/components/BlackBallModel";
+import { Physics } from "@react-three/cannon";
+import RightArrow from "../RightArrow";
+import LeftArrow from "../LeftArrow";
 
-const Model = ({ position, onCollide, ...props }) => {
-  const { gameState } = useContext(GameContext);
-  const { nodes, materials } = useGLTF("../models/Football.glb");
+const BallSelection = () => {
+  const [selectedBallIndex, setSelectedBallIndex] = useState(0);
 
-  const [ref, api] = useSphere(() => ({
-    mass: 1,
-    position: position,
-    args: [size.length() / 2],
-    material: { restitution: 1.5 },
-    ...props,
-  }));
+  const balls = [
+    { component: Model, position: [0, 0, 0] },
+    { component: BlackBallModel, position: [0, 0, 0] },
+  ];
 
-  useFrame(({ scene }) => {
-    if (ref.current) {
-      // Update the mesh rotation to match the physics body rotation
-      ref.current.rotation.copy(ref.current.children[0].quaternion);
+  const BallComponent = balls[selectedBallIndex].component;
+
+  const handleArrowClick = (direction) => {
+    if (direction === "left") {
+      setSelectedBallIndex((index) => (index === 0 ? 1 : index - 1));
+    } else if (direction === "right") {
+      setSelectedBallIndex((index) => (index === 1 ? 0 : index + 1));
     }
-  });
-
-  useEffect(() => {
-    if (gameState === "selection") {
-      api.position.set(0, 0, 0);
-      api.velocity.set(0, 0, 0);
-      api.angularVelocity.set(0, 1, 0);
-      api.mass.set(0);
-    } else if (gameState === "home") {
-      api.position.set(0, 3, 0);
-      api.velocity.set(0, 1, 0);
-      api.rotation.set(0, 0, 0);
-      api.angularVelocity.set(0, 0, 0);
-      api.mass.set(1);
-    }
-  }, [gameState, api]);
-
-  const targetPosition = useRef(new Vector3(...position));
-
-  // Calculate the bounding box of the mesh
-  const box = new Box3().setFromObject(nodes.Solid);
-
-  // Calculate the size of the bounding box
-  const size = new Vector3();
-  box.getSize(size);
-
-  // Calculate the center of the bounding box
-  const center = new Vector3();
-  box.getCenter(center);
-
-  // Add physics to the model
-
-  useEffect(() => {
-    targetPosition.current.set(...position);
-  }, [position]);
-
-  useEffect(() => {
-    if (ref.current && onCollide) {
-      ref.current.addEventListener("collide", (e) =>
-        onCollide(e, ref.current.children[0])
-      );
-    }
-
-    return () => {
-      if (ref.current && onCollide) {
-        ref.current.removeEventListener("collide", (e) =>
-          onCollide(e, ref.current.children[0])
-        );
-      }
-    };
-  }, [ref, onCollide]);
+  };
 
   return (
-    <group
-      ref={ref}
-      dispose={null}
-      position={[-center.x, -center.y, -center.z]}
-      scale={[0.3, 0.3, 0.3]}
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        position: "absolute",
+        top: "0",
+        left: "0",
+        right: "0",
+        bottom: "0",
+        width: "100%",
+        zIndex: "100",
+      }}
     >
-      <group position={[0, 0, -0.01]} rotation={[-Math.PI, 0, -Math.PI]}>
-        <mesh
+      <Canvas camera={{ position: [0, 0, 3], fov: 50 }}>
+        <spotLight
+          position={[0, 20, 10]}
+          intensity={0.5}
+          angle={Math.PI / 6}
+          penumbra={1}
           castShadow
-          receiveShadow
-          geometry={nodes.Solid.geometry}
-          material={materials.White}
         />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Solid_1.geometry}
-          material={materials.White}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Solid_2.geometry}
-          material={materials.Stiches}
-        />
-      </group>
-    </group>
+        <ambientLight intensity={0.5} />
+        <Physics>
+          <BallComponent
+            position={balls[selectedBallIndex].position}
+            selected={true}
+          />
+        </Physics>
+      </Canvas>
+      <div
+        style={{
+          position: "absolute",
+          width: "200px",
+          height: "200px",
+          borderRadius: "50%",
+          border: "2px solid white",
+          zIndex: "101",
+        }}
+      ></div>
+      <button
+        onClick={() => handleArrowClick("left")}
+        style={{
+          position: "absolute",
+          left: "0",
+          zIndex: "101",
+          fontSize: "24px",
+          color: "white",
+        }}
+      >
+        <RightArrow size={40}/>
+      </button>
+      <button
+        onClick={() => handleArrowClick("right")}
+        style={{
+          position: "absolute",
+          right: "0",
+          zIndex: "101",
+          fontSize: "24px",
+          color: "white",
+        }}
+      >
+        <LeftArrow size={40}/>
+      </button>
+    </div>
   );
 };
 
-useGLTF.preload("../models/Football.glb");
-export default Model;
+export default BallSelection;
