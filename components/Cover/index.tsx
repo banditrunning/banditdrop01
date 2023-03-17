@@ -194,6 +194,7 @@ const Cover = () => {
             }
           }
         `}</style>
+        <BallGame />
       </>
     );
   };
