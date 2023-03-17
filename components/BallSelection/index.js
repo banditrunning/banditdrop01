@@ -13,7 +13,7 @@ const Model = ({ position, onCollide, ...props }) => {
     mass: 1,
     position: position,
     args: [size.length() / 2],
-    material: { restitution: 1.2 },
+    material: { restitution: 1.5 },
     ...props,
   }));
 

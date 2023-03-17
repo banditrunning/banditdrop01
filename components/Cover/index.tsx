@@ -5,7 +5,7 @@ import GameContext from "@/context";
 import LeftArrow from "../LeftArrow";
 
 const Cover = () => {
-  const Home = () => {
+  const Home: React.FC = () => {
     const [showContent, setShowContent] = useState(false);
     const [showMarquee, setShowMarquee] = useState(false);
 
@@ -15,7 +15,7 @@ const Cover = () => {
       }, 1000); // adjust this value as needed for the desired fade-in duration
       const marqueeTimeout = setTimeout(() => {
         setShowMarquee(true);
-      }, 2000); // adjust this value as needed for the desired slide-up duration
+      }, 1000); // adjust this value as needed for the desired slide-up duration
 
       return () => {
         clearTimeout(fadeInTimeout);
@@ -42,15 +42,16 @@ const Cover = () => {
           <div>Juggle?</div>
         </div>
         <div
-          className={`w-full fixed bottom-[-100%] left-0 right-0 ${
-            showMarquee ? "marquee-show-animation duration-1000 ease-out" : ""
+          className={`w-full fixed bottom-[-100%] left-0 right-0 z-[101] ${
+            showMarquee ? "marquee-show-animation duration-500 ease-out" : ""
           }`}
+          onClick={handleScreenTap}
         >
           <Marquee
             className="bg-[#2c2c2c] text-white font-GroteskRegular uppercase py-3"
             gradient={false}
             speed={30}
-            delay={3}
+            delay={1}
           >
             {Array(19)
               .fill(19, 0, 19)
@@ -73,14 +74,12 @@ const Cover = () => {
             }
           }
         `}</style>
-        <div onClick={handleScreenTap}>
-          <BallGame />
-        </div>
+        <div onClick={handleScreenTap}></div>
       </>
     );
   };
 
-  const Selection = () => {
+  const Selection: React.FC = () => {
     const [showContent, setShowContent] = useState(false);
     const [showMarquee, setShowMarquee] = useState(false);
 
@@ -106,54 +105,34 @@ const Cover = () => {
     return (
       <>
         <div
-          className={`font-GroteskRegular text-white uppercase text-7xl leading-[3.9rem] py-4 ${
+          className={`font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 ${
             showContent
-              ? "opacity-100 transition-opacity duration-1000 ease-in"
+              ? "opacity-100 transition-opacity duration-500 ease-in"
               : "opacity-0"
           }`}
         >
-          <div>Pick</div>
-          <div>Your</div>
+          <div>Pick Your</div>
           <div>Poison</div>
         </div>
         <div
-          className={`w-full fixed bottom-[-100%] left-0 right-0 ${
-            showMarquee ? "marquee-show-animation duration-1000 ease-out" : ""
+          className={`w-full fixed bottom-4 left-0 right-0 px-4 z-[101] ${
+            showContent
+              ? "opacity-100 transition-opacity duration-500 ease-in"
+              : "opacity-0"
           }`}
         >
-          <Marquee
-            className="bg-[#2c2c2c] text-white font-GroteskRegular uppercase py-3"
-            gradient={false}
-            speed={30}
-            delay={3}
+          <button
+            className="relative uppercase text-white font-GroteskRegular text-2xl bg-[#C97900] w-full flex flex-row items-center justify-center py-2 rounded-md]"
+            onClick={handlePlayTap}
           >
-            {Array(19)
-              .fill(19, 0, 19)
-              .map((_, index) => (
-                <MarqueeMessage key={index} />
-              ))}
-          </Marquee>
+            Play <LeftArrow />
+          </button>
         </div>
-        <style jsx>{`
-          .marquee-show-animation {
-            animation: slide-up 1s ease-out forwards;
-          }
-
-          @keyframes slide-up {
-            from {
-              bottom: -100%;
-            }
-            to {
-              bottom: 0;
-            }
-          }
-        `}</style>
-        <BallGame />
       </>
     );
   };
 
-  const Gameplay = () => {
+  const Gameplay: React.FC = () => {
     const [showContent, setShowContent] = useState(false);
     const [showMarquee, setShowMarquee] = useState(false);
 
@@ -221,7 +200,6 @@ const Cover = () => {
             }
           }
         `}</style>
-        <BallGame />
       </>
     );
   };
@@ -232,15 +210,20 @@ const Cover = () => {
     setGameState("selection");
   };
 
-  if (gameState === "home") {
-    return <Home />;
-  } else if (gameState === "selection") {
-    return <Selection />;
-  } else if (gameState === "gameplay") {
-    return <Gameplay />;
-  } else {
-    return <div>Error: Invalid app state</div>;
-  }
+  const handlePlayTap = () => {
+    setGameState("gameplay");
+  };
+
+  // Calculate model position based on gameState
+
+  return (
+    <div>
+      <BallGame />
+      {gameState === "home" && <Home />}
+      {gameState === "selection" && <Selection />}
+      {gameState === "gameplay" && <Gameplay />}
+    </div>
+  );
 };
 
 export default Cover;
