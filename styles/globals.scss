@@ -17,3 +17,6 @@ html {
   font-family: "grotesk-bold";
   src: url("../public/fonts/tomato-grotesk-semibold.otf");
 }
+html::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
+}
