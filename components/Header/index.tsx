@@ -28,7 +28,7 @@ export default function Header(props: { showContent: boolean }) {
           <Symbol />
         ) : (
           <div onClick={handleClick}>
-            <RightArrow />
+            <RightArrow size={24}/>
           </div>
         )}
       </div>

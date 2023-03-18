@@ -32,7 +32,7 @@ const Cover = () => {
     return (
       <>
         <div
-          className={`font-GroteskRegular text-white uppercase text-7xl leading-[3.9rem] py-4 ${
+          className={`font-GroteskRegular text-white uppercase text-7xl leading-[3.9rem] py-4 fixed top-14 ${
             showContent
               ? "opacity-100 transition-opacity duration-1000 ease-in"
               : "opacity-0"

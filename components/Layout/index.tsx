@@ -16,7 +16,7 @@ export default function Layout(props: { children: any }) {
   return (
     <div className="flex flex-col min-h-screen relative mx-4 m-auto">
       <Header showContent={showContent} />
-      <main className="flex-1 flex flex-col mt-[60px]">{children}</main>
+      <main className="flex-1 flex flex-col">{children}</main>
     </div>
   );
 }
