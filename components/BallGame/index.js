@@ -224,7 +224,7 @@ const ThreeScene = ({ isClient }) => {
         position: "absolute",
         top: "0",
         left: "0",
-
+        overflow: "hidden",
         right: "0",
         bottom: "0",
         width: "100%",
