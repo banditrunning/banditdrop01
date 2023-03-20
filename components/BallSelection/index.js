@@ -1,20 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import { Canvas } from "@react-three/fiber";
-import Model from "/components/Model";
-import BlackBallModel from "/components/BlackBallModel";
 import { Physics } from "@react-three/cannon";
 import RightArrow from "../RightArrow";
 import LeftArrow from "../LeftArrow";
+import { useContext } from "react";
+import GameContext from "@/context";
 
-const BallSelection = () => {
-  const [selectedBallIndex, setSelectedBallIndex] = useState(0);
+const BallSelection = ({ selectedBallIndex, setSelectedBallIndex, balls }) => {
+  const { setBallSelection } = useContext(GameContext);
 
-  const balls = [
-    { component: Model, position: [0, 0, 0] },
-    { component: BlackBallModel, position: [0, 0, 0] },
-  ];
-
-  const BallComponent = balls[selectedBallIndex].component;
+  const BallComponent = memo(balls[selectedBallIndex].component);
 
   const handleArrowClick = (direction) => {
     if (direction === "left") {
@@ -22,6 +17,7 @@ const BallSelection = () => {
     } else if (direction === "right") {
       setSelectedBallIndex((index) => (index === 1 ? 0 : index + 1));
     }
+    setBallSelection(balls[selectedBallIndex]);
   };
 
   return (
@@ -76,7 +72,7 @@ const BallSelection = () => {
           color: "white",
         }}
       >
-        <RightArrow size={40}/>
+        <RightArrow size={40} />
       </button>
       <button
         onClick={() => handleArrowClick("right")}
@@ -88,7 +84,7 @@ const BallSelection = () => {
           color: "white",
         }}
       >
-        <LeftArrow size={40}/>
+        <LeftArrow size={40} />
       </button>
     </div>
   );

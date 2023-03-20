@@ -3,9 +3,19 @@ import { useEffect, useState, useContext } from "react";
 import BallGame from "../BallGame";
 import GameContext from "@/context";
 import LeftArrow from "../LeftArrow";
+import Model from "../Model";
+import BlackBallModel from "../BlackBallModel";
 import BallSelection from "../BallSelection";
 
 const Cover = () => {
+  const [selectedBallIndex, setSelectedBallIndex] = useState(0);
+  const { gameState, setGameState, setBallSelection } = useContext(GameContext);
+
+  const balls = [
+    { component: Model, position: [0, 0, 0] },
+    { component: BlackBallModel, position: [0, 0, 0] },
+  ];
+
   const Home: React.FC = () => {
     const [showContent, setShowContent] = useState(false);
     const [showMarquee, setShowMarquee] = useState(false);
@@ -81,7 +91,7 @@ const Cover = () => {
     );
   };
 
-  const Selection: React.FC = () => {
+  const Selection = ({ selectedBallIndex, setSelectedBallIndex }) => {
     const [showContent, setShowContent] = useState(false);
     const [showMarquee, setShowMarquee] = useState(false);
 
@@ -98,7 +108,7 @@ const Cover = () => {
     return (
       <>
         <div
-          className={`font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 ${
+          className={`font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden ${
             showContent
               ? "opacity-100 transition-opacity duration-500 ease-in"
               : "opacity-0"
@@ -122,7 +132,11 @@ const Cover = () => {
           </button>
         </div>
 
-        <BallSelection />
+        <BallSelection
+          selectedBallIndex={selectedBallIndex}
+          setSelectedBallIndex={setSelectedBallIndex}
+          balls={balls}
+        />
       </>
     );
   };
@@ -153,7 +167,7 @@ const Cover = () => {
     return (
       <>
         <div
-          className={`font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 ${
+          className={`font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden ${
             showContent
               ? "opacity-100 transition-opacity duration-1000 ease-in"
               : "opacity-0"
@@ -199,13 +213,12 @@ const Cover = () => {
     );
   };
 
-  const { gameState, setGameState } = useContext(GameContext);
-
   const handleScreenTap = () => {
     setGameState("selection");
   };
 
   const handlePlayTap = () => {
+    setBallSelection(balls[selectedBallIndex]);
     setGameState("gameplay");
   };
 
@@ -214,7 +227,12 @@ const Cover = () => {
   return (
     <div>
       {gameState === "home" && <Home />}
-      {gameState === "selection" && <Selection />}
+      {gameState === "selection" && (
+        <Selection
+          selectedBallIndex={selectedBallIndex}
+          setSelectedBallIndex={setSelectedBallIndex}
+        />
+      )}
       {gameState === "gameplay" && <Gameplay />}
     </div>
   );
