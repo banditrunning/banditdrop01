@@ -3,12 +3,8 @@ import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/cannon";
 import RightArrow from "../RightArrow";
 import LeftArrow from "../LeftArrow";
-import { useContext } from "react";
-import GameContext from "@/context";
 
 const BallSelection = ({ selectedBallIndex, setSelectedBallIndex, balls }) => {
-  const { setBallSelection } = useContext(GameContext);
-
   const BallComponent = memo(balls[selectedBallIndex].component);
 
   const handleArrowClick = (direction) => {
@@ -17,7 +13,6 @@ const BallSelection = ({ selectedBallIndex, setSelectedBallIndex, balls }) => {
     } else if (direction === "right") {
       setSelectedBallIndex((index) => (index === 1 ? 0 : index + 1));
     }
-    setBallSelection(balls[selectedBallIndex]);
   };
 
   return (

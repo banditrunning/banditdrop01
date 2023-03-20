@@ -1,11 +1,12 @@
 import Marquee from "react-fast-marquee";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, memo } from "react";
 import BallGame from "../BallGame";
 import GameContext from "@/context";
 import LeftArrow from "../LeftArrow";
 import Model from "../Model";
 import BlackBallModel from "../BlackBallModel";
 import BallSelection from "../BallSelection";
+import Play from "../Play";
 
 const Cover = () => {
   const [selectedBallIndex, setSelectedBallIndex] = useState(0);
@@ -112,33 +113,39 @@ const Cover = () => {
       };
     }, []);
 
-    return (
-      <>
+    const Header = memo(({ text }) => {
+      return (
         <div
           className={`font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden ${
-            showContent
+            text
               ? "opacity-100 transition-opacity duration-500 ease-in"
               : "opacity-0"
           }`}
         >
-          <div>Pick Your</div>
-          <div>Poison</div>
+          {text.split("\n").map((line, index) => (
+            <div key={index}>{line}</div>
+          ))}
         </div>
-        <div
-          className={`w-full fixed bottom-4 left-0 right-0 px-4 z-[101] ${
-            showContent
-              ? "opacity-100 transition-opacity duration-500 ease-in"
-              : "opacity-0"
-          }`}
-        >
+      );
+    });
+
+    const PlayButton = memo(({ onClick }) => {
+      return (
+        <div className="w-full fixed bottom-4 left-0 right-0 px-4 z-[101] opacity-100 transition-opacity duration-500 ease-in">
           <button
             className="relative uppercase text-white font-GroteskRegular text-2xl bg-[#C97900] w-full flex flex-row items-center justify-center py-2 rounded-md"
-            onClick={handlePlayTap}
+            onClick={onClick}
           >
             Play <LeftArrow />
           </button>
         </div>
+      );
+    });
 
+    return (
+      <>
+        <Header text="Pick Your Poison" />
+        <PlayButton onClick={handlePlayTap} />
         <BallSelection
           selectedBallIndex={selectedBallIndex}
           setSelectedBallIndex={setSelectedBallIndex}
@@ -147,8 +154,11 @@ const Cover = () => {
       </>
     );
   };
+  interface GameplayProps {
+    selectedBallIndex: number;
+  }
 
-  const Gameplay: React.FC = () => {
+  const Gameplay: React.FC = ({ selectedBallIndex }) => {
     const [showContent, setShowContent] = useState(false);
     const [showMarquee, setShowMarquee] = useState(false);
 
@@ -215,7 +225,7 @@ const Cover = () => {
             }
           }
         `}</style>
-        <BallGame />
+        <Play selectedBallIndex={selectedBallIndex} />
       </>
     );
   };
@@ -240,7 +250,9 @@ const Cover = () => {
           setSelectedBallIndex={setSelectedBallIndex}
         />
       )}
-      {gameState === "gameplay" && <Gameplay />}
+      {gameState === "gameplay" && (
+        <Gameplay selectedBallIndex={selectedBallIndex} />
+      )}
     </div>
   );
 };
