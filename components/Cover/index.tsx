@@ -18,7 +18,10 @@ import BallSelection from "../BallSelection";
 import Play from "../Play";
 
 interface Ball {
-  component: React.FC;
+  component: React.FC<{
+    position: [number, number, number];
+    onCollide: () => void;
+  }>;
   position: [number, number, number];
 }
 
