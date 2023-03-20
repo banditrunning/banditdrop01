@@ -98,7 +98,6 @@ const RightBumper = (props) => {
       const aspectRatio = window.innerWidth / window.innerHeight;
       setPositionY(-aspectRatio * 3);
     };
-
     setGroundPosition();
     window.addEventListener("resize", setGroundPosition);
 
@@ -137,10 +136,12 @@ const CameraControls = () => {
   );
 };
 
-const ThreeScene = ({ isClient }) => {
-  const { gameState } = useContext(GameContext);
+const ThreeScene = ({ isClient, ball }) => {
+  const { gameState, selectedBall } = useContext(GameContext);
   const [modelPosition, setModelPosition] = useState([0, 3, 0]);
   const [selectedBallIndex, setSelectedBallIndex] = useState(0);
+  const [isBallDropped, setIsBallDropped] = useState(false);
+  const ballRef = useRef();
 
   useEffect(() => {
     if (gameState === "selection") {
@@ -189,7 +190,20 @@ const ThreeScene = ({ isClient }) => {
     setConstantRotation(randomAngularVelocity);
 
     meshRef.parent.setAngularVelocity(randomAngularVelocity);
+    setIsBallDropped(true);
   }, []);
+
+  const handlePointerDown = useCallback(
+    (event) => {
+      if (isBallDropped && ballRef.current) {
+        const ballBody = ballRef.current;
+        const impulse = new THREE.Vector3(0, 20, 0);
+        ballBody.applyImpulse(impulse);
+        setIsBallDropped(false);
+      }
+    },
+    [isBallDropped]
+  );
 
   const balls = [
     { position: [-1, 3, 0] },
@@ -239,6 +253,7 @@ const ThreeScene = ({ isClient }) => {
         }}
         shadows
         onPointerUp={handleSwipe}
+        onPointerDown={handlePointerDown}
       >
         <spotLight
           position={[0, 20, 10]}
@@ -254,7 +269,12 @@ const ThreeScene = ({ isClient }) => {
             {gameState === "selection" ? (
               <BallSelection position={modelPosition} />
             ) : (
-              <Model position={modelPosition} onCollide={handleCollision} />
+              <Model
+                ball={selectedBall}
+                position={modelPosition}
+                onCollide={handleCollision}
+                ref={ballRef}
+              />
             )}
             <Ground position={groundPosition} />
             <LeftBumper />
@@ -268,7 +288,7 @@ const ThreeScene = ({ isClient }) => {
   );
 };
 
-const Play = () => {
+const Play = ({ ball }) => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -279,7 +299,7 @@ const Play = () => {
     return null;
   }
 
-  return <ThreeScene isClient={isClient} />;
+  return <ThreeScene isClient={isClient} ball={ball} />;
 };
 
 export default Play;

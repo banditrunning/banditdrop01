@@ -180,10 +180,10 @@ const Cover: React.FC = () => {
   Selection.displayName = "Selection";
 
   interface GameplayProps {
-    selectedBallIndex: number;
+    selectedBall: Ball;
   }
 
-  const Gameplay: React.FC = ({}) => {
+  const Gameplay: React.FC<GameplayProps> = ({ selectedBall }) => {
     const [showContent, setShowContent] = useState(false);
     const [showMarquee, setShowMarquee] = useState(false);
 
@@ -250,7 +250,7 @@ const Cover: React.FC = () => {
             }
           }
         `}</style>
-        <Play />
+        <Play ball={selectedBall} />
       </>
     );
   };
@@ -275,7 +275,9 @@ const Cover: React.FC = () => {
           setSelectedBallIndex={setSelectedBallIndex}
         />
       )}
-      {gameState === "gameplay" && <Gameplay />}
+      {gameState === "gameplay" && (
+        <Gameplay selectedBall={balls[selectedBallIndex]} />
+      )}
     </div>
   );
 };
