@@ -111,10 +111,10 @@ const Cover: React.FC = () => {
     setSelectedBallIndex: (index: number) => void;
   }
 
-  const Selection = function Selection({
+  const Selection: React.FC<SelectionProps> = ({
     selectedBallIndex,
     setSelectedBallIndex,
-  }) {
+  }) => {
     const [showContent, setShowContent] = useState(false);
     const [showMarquee, setShowMarquee] = useState(false);
 
@@ -173,11 +173,14 @@ const Cover: React.FC = () => {
       </>
     );
   };
+
+  Selection.displayName = "Selection";
+
   interface GameplayProps {
     selectedBallIndex: number;
   }
 
-  const Gameplay = function Gameplay({}) {
+  const Gameplay: React.FC = ({}) => {
     const [showContent, setShowContent] = useState(false);
     const [showMarquee, setShowMarquee] = useState(false);
 
@@ -248,6 +251,8 @@ const Cover: React.FC = () => {
       </>
     );
   };
+
+  Gameplay.displayName = "Gameplay";
 
   const handleScreenTap = () => {
     setGameState("selection");
