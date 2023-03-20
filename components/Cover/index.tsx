@@ -90,8 +90,15 @@ const Cover = () => {
       </>
     );
   };
+  interface SelectionProps {
+    selectedBallIndex: number;
+    setSelectedBallIndex: (index: number) => void;
+  }
 
-  const Selection = ({ selectedBallIndex, setSelectedBallIndex }) => {
+  const Selection: React.FC<SelectionProps> = ({
+    selectedBallIndex,
+    setSelectedBallIndex,
+  }) => {
     const [showContent, setShowContent] = useState(false);
     const [showMarquee, setShowMarquee] = useState(false);
 
