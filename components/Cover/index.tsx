@@ -111,10 +111,10 @@ const Cover: React.FC = () => {
     setSelectedBallIndex: (index: number) => void;
   }
 
-  const Selection: React.FC<SelectionProps> = ({
+  const Selection = function Selection({
     selectedBallIndex,
     setSelectedBallIndex,
-  }) => {
+  }) {
     const [showContent, setShowContent] = useState(false);
     const [showMarquee, setShowMarquee] = useState(false);
 
@@ -177,7 +177,7 @@ const Cover: React.FC = () => {
     selectedBallIndex: number;
   }
 
-  const Gameplay: React.FC = ({}) => {
+  const Gameplay = function Gameplay({}) {
     const [showContent, setShowContent] = useState(false);
     const [showMarquee, setShowMarquee] = useState(false);
 
