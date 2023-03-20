@@ -158,7 +158,7 @@ const Cover = () => {
     selectedBallIndex: number;
   }
 
-  const Gameplay: React.FC = ({ selectedBallIndex }) => {
+  const Gameplay: React.FC = ({}) => {
     const [showContent, setShowContent] = useState(false);
     const [showMarquee, setShowMarquee] = useState(false);
 
@@ -225,7 +225,7 @@ const Cover = () => {
             }
           }
         `}</style>
-        <Play selectedBallIndex={selectedBallIndex} />
+        <Play />
       </>
     );
   };
