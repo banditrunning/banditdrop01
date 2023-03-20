@@ -1,5 +1,14 @@
 import Marquee from "react-fast-marquee";
-import { useEffect, useState, useContext, memo } from "react";
+import {
+  useEffect,
+  useState,
+  useContext,
+  memo,
+  Key,
+  ReactElement,
+  ReactFragment,
+  ReactPortal,
+} from "react";
 import BallGame from "../BallGame";
 import GameContext from "@/context";
 import LeftArrow from "../LeftArrow";
@@ -8,11 +17,16 @@ import BlackBallModel from "../BlackBallModel";
 import BallSelection from "../BallSelection";
 import Play from "../Play";
 
-const Cover = () => {
+interface Ball {
+  component: React.FC;
+  position: [number, number, number];
+}
+
+const Cover: React.FC = () => {
   const [selectedBallIndex, setSelectedBallIndex] = useState(0);
   const { gameState, setGameState, setBallSelection } = useContext(GameContext);
 
-  const balls = [
+  const balls: Ball[] = [
     { component: Model, position: [0, 0, 0] },
     { component: BlackBallModel, position: [0, 0, 0] },
   ];
@@ -91,6 +105,7 @@ const Cover = () => {
       </>
     );
   };
+
   interface SelectionProps {
     selectedBallIndex: number;
     setSelectedBallIndex: (index: number) => void;
@@ -113,7 +128,7 @@ const Cover = () => {
       };
     }, []);
 
-    const Header = memo(({ text }) => {
+    const Header = memo(({ text }: { text: string }) => {
       return (
         <div
           className={`font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden ${
@@ -129,7 +144,11 @@ const Cover = () => {
       );
     });
 
-    const PlayButton = memo(({ onClick }) => {
+    interface PlayButtonProps {
+      onClick: () => void;
+    }
+
+    const PlayButton = memo(({ onClick }: PlayButtonProps) => {
       return (
         <div className="w-full fixed bottom-4 left-0 right-0 px-4 z-[101] opacity-100 transition-opacity duration-500 ease-in">
           <button
@@ -239,8 +258,6 @@ const Cover = () => {
     setGameState("gameplay");
   };
 
-  // Calculate model position based on gameState
-
   return (
     <div>
       {gameState === "home" && <Home />}
@@ -250,9 +267,7 @@ const Cover = () => {
           setSelectedBallIndex={setSelectedBallIndex}
         />
       )}
-      {gameState === "gameplay" && (
-        <Gameplay selectedBallIndex={selectedBallIndex} />
-      )}
+      {gameState === "gameplay" && <Gameplay />}
     </div>
   );
 };
