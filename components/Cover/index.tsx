@@ -128,7 +128,7 @@ const Cover: React.FC = () => {
       };
     }, []);
 
-    const Header = memo(({ text }: { text: string }) => {
+    const Header = memo(function Header({ text }: { text: string }) {
       return (
         <div
           className={`font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden ${
@@ -148,7 +148,7 @@ const Cover: React.FC = () => {
       onClick: () => void;
     }
 
-    const PlayButton = memo(({ onClick }: PlayButtonProps) => {
+    const PlayButton = memo(function PlayButton({ onClick }: PlayButtonProps) {
       return (
         <div className="w-full fixed bottom-4 left-0 right-0 px-4 z-[101] opacity-100 transition-opacity duration-500 ease-in">
           <button
