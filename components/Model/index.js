@@ -1,11 +1,11 @@
-import React, { useRef, useEffect, useContext } from "react";
+import React, { useRef, useEffect, useMemo, useContext } from "react";
 import { useGLTF } from "@react-three/drei";
 import { Box3, Vector3 } from "three";
 import { useSphere } from "@react-three/cannon";
 import { useFrame } from "@react-three/fiber";
 import GameContext from "@/context";
 
-const Model = ({ position, onCollide, ...props }) => {
+const Model = ({ position, onCollide, clickable, ...props }) => {
   const { gameState } = useContext(GameContext);
   const { nodes, materials } = useGLTF("../models/Football.glb");
 
@@ -52,8 +52,6 @@ const Model = ({ position, onCollide, ...props }) => {
   const center = new Vector3();
   box.getCenter(center);
 
-  // Add physics to the model
-
   useEffect(() => {
     targetPosition.current.set(...position);
   }, [position]);
@@ -74,12 +72,19 @@ const Model = ({ position, onCollide, ...props }) => {
     };
   }, [ref, onCollide]);
 
+  function handleClick() {
+    const upwardForce = [0, 100, 0];
+    const worldPoint = [0, 0, 0];
+    api.applyForce(upwardForce, worldPoint);
+  }
+
   return (
     <group
       ref={ref}
       dispose={null}
       position={[-center.x, -center.y, -center.z]}
       scale={[0.3, 0.3, 0.3]}
+      onClick={clickable ? handleClick : null}
     >
       <group position={[0, 0, -0.01]} rotation={[-Math.PI, 0, -Math.PI]}>
         <mesh
@@ -104,6 +109,5 @@ const Model = ({ position, onCollide, ...props }) => {
     </group>
   );
 };
-
 useGLTF.preload("../models/Football.glb");
 export default Model;

@@ -13,7 +13,6 @@ import Model from "/components/Model";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as THREE from "three";
 import GameContext from "@/context";
-import BallSelection from "@/components/BallSelection";
 
 extend({ OrbitControls });
 
@@ -49,71 +48,6 @@ const Ground = (props) => {
   );
 };
 
-const LeftBumper = (props) => {
-  const { size } = useThree();
-  const aspect = size.width / size.height;
-  const [positionY, setPositionY] = useState(-2.75);
-  const [ref] = usePlane(() => ({
-    rotation: [-Math.PI / 2, 0, -Math.PI / 2],
-    position: [-aspect * 3, positionY, 0],
-    material: { restitution: 0.4 },
-    ...props,
-  }));
-
-  useEffect(() => {
-    const setGroundPosition = () => {
-      const aspectRatio = window.innerWidth / window.innerHeight;
-      setPositionY(-aspectRatio * 3);
-    };
-
-    setGroundPosition();
-    window.addEventListener("resize", setGroundPosition);
-
-    return () => {
-      window.removeEventListener("resize", setGroundPosition);
-    };
-  }, []);
-
-  return (
-    <mesh ref={ref} receiveShadow>
-      <planeBufferGeometry attach="geometry" args={[100, 100]} />
-      <shadowMaterial attach="material" transparent opacity={0.5} />
-    </mesh>
-  );
-};
-
-const RightBumper = (props) => {
-  const { size } = useThree();
-  const aspect = size.width / size.height;
-  const [positionY, setPositionY] = useState(-2.75);
-  const [ref] = usePlane(() => ({
-    rotation: [-Math.PI / 2, 0, Math.PI / 2],
-    position: [aspect * 3, positionY, 0],
-    material: { restitution: 0.4 },
-    ...props,
-  }));
-
-  useEffect(() => {
-    const setGroundPosition = () => {
-      const aspectRatio = window.innerWidth / window.innerHeight;
-      setPositionY(-aspectRatio * 3);
-    };
-    setGroundPosition();
-    window.addEventListener("resize", setGroundPosition);
-
-    return () => {
-      window.removeEventListener("resize", setGroundPosition);
-    };
-  }, []);
-
-  return (
-    <mesh ref={ref} receiveShadow>
-      <planeBufferGeometry attach="geometry" args={[100, 100]} />
-      <shadowMaterial attach="material" transparent opacity={0.5} />
-    </mesh>
-  );
-};
-
 const CameraControls = () => {
   const {
     camera,
@@ -140,8 +74,6 @@ const ThreeScene = ({ isClient, ball }) => {
   const { gameState, selectedBall } = useContext(GameContext);
   const [modelPosition, setModelPosition] = useState([0, 3, 0]);
   const [selectedBallIndex, setSelectedBallIndex] = useState(0);
-  const [isBallDropped, setIsBallDropped] = useState(false);
-  const ballRef = useRef();
 
   useEffect(() => {
     if (gameState === "selection") {
@@ -190,43 +122,7 @@ const ThreeScene = ({ isClient, ball }) => {
     setConstantRotation(randomAngularVelocity);
 
     meshRef.parent.setAngularVelocity(randomAngularVelocity);
-    setIsBallDropped(true);
   }, []);
-
-  const handlePointerDown = useCallback(
-    (event) => {
-      if (isBallDropped && ballRef.current) {
-        const ballBody = ballRef.current;
-        const impulse = new THREE.Vector3(0, 20, 0);
-        ballBody.applyImpulse(impulse);
-        setIsBallDropped(false);
-      }
-    },
-    [isBallDropped]
-  );
-
-  const balls = [
-    { position: [-1, 3, 0] },
-    { position: [0, 3, 0] },
-    { position: [1, 3, 0] },
-  ];
-
-  const handleSwipe = useCallback(
-    (event) => {
-      const delta = event.deltaX;
-
-      if (delta > 0) {
-        setSelectedBallIndex((index) =>
-          index === balls.length - 1 ? 0 : index + 1
-        );
-      } else if (delta < 0) {
-        setSelectedBallIndex((index) =>
-          index === 0 ? balls.length - 1 : index - 1
-        );
-      }
-    },
-    [balls.length]
-  );
 
   return (
     <div
@@ -252,8 +148,6 @@ const ThreeScene = ({ isClient, ball }) => {
           aspect: isClient ? window.innerWidth / window.innerHeight : 1,
         }}
         shadows
-        onPointerUp={handleSwipe}
-        onPointerDown={handlePointerDown}
       >
         <spotLight
           position={[0, 20, 10]}
@@ -266,19 +160,13 @@ const ThreeScene = ({ isClient, ball }) => {
         <directionalLight intensity={0.1} />
         <Suspense fallback={null}>
           <Physics gravity={[0, -15, 0]}>
-            {gameState === "selection" ? (
-              <BallSelection position={modelPosition} />
-            ) : (
-              <Model
-                ball={selectedBall}
-                position={modelPosition}
-                onCollide={handleCollision}
-                ref={ballRef}
-              />
-            )}
+            <Model
+              ball={selectedBall}
+              position={modelPosition}
+              onCollide={handleCollision}
+              clickable
+            />
             <Ground position={groundPosition} />
-            <LeftBumper />
-            <RightBumper />
           </Physics>
           <Environment preset="city" background={false} />
         </Suspense>
