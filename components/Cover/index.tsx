@@ -31,7 +31,7 @@ const Cover: React.FC = () => {
   const { gameState, setGameState, setBallSelection } = useContext(GameContext);
 
   const balls: Ball[] = [
-    { component: Model, position: [0, 0, 0] },
+    { component: Model, position: [0, 0, 0], clickable: true },
     { component: BlackBallModel, position: [0, 0, 0] },
   ];
 
@@ -263,8 +263,8 @@ const Cover: React.FC = () => {
   };
 
   const handlePlayTap = () => {
-    setGameState("playing");
-    setBall(balls[selectedBallIndex]); // set the selected ball in the global state
+    setGameState("gameplay");
+    setSelectedBallIndex(0);
   };
 
   return (
