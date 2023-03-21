@@ -5,10 +5,13 @@ import { useSphere } from "@react-three/cannon";
 import { useFrame } from "@react-three/fiber";
 import GameContext from "@/context";
 import { useGesture } from "react-use-gesture";
+import { useSound } from "use-sound";
+import kick from "public/sounds/kick.mp4";
 
 function Model({ position, onCollide, clickable, ...props }) {
   const { gameState } = useContext(GameContext);
   const { nodes, materials } = useGLTF("../models/Football.glb");
+  const [playKickSound] = useSound(kick);
 
   const [ref, api] = useSphere(() => ({
     mass: gameState === "selection" ? 0 : 1,
@@ -73,6 +76,7 @@ function Model({ position, onCollide, clickable, ...props }) {
       const worldPoint = [0, 0, 0];
       api.applyForce(upwardForce, worldPoint);
       api.applyTorque(spinTorque); // apply the torque
+      playKickSound(); // play the kick sound effect
     },
   });
 
