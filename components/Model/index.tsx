@@ -7,7 +7,7 @@ import GameContext from "@/context";
 
 interface ModelProps {
   position: [number, number, number];
-  onCollide: (e: any, child: any) => void;
+  onCollide?: (e: any, child: any) => void;
   clickable?: boolean;
 }
 
