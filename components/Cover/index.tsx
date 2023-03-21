@@ -21,6 +21,7 @@ interface Ball {
   component: React.FC<{
     position: [number, number, number];
     onCollide: () => void;
+    clickable?: boolean;
   }>;
   position: [number, number, number];
 }
@@ -262,8 +263,8 @@ const Cover: React.FC = () => {
   };
 
   const handlePlayTap = () => {
-    setBallSelection(balls[selectedBallIndex]);
-    setGameState("gameplay");
+    setGameState("playing");
+    setBall(balls[selectedBallIndex]); // set the selected ball in the global state
   };
 
   return (
