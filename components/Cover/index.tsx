@@ -17,22 +17,38 @@ import BlackBallModel from "../BlackBallModel";
 import BallSelection from "../BallSelection";
 import Play from "../Play";
 
-interface Ball {
-  component: React.FC<{
-    position: [number, number, number];
-    onCollide: () => void;
-    clickable?: boolean;
-  }>;
-  position: [number, number, number];
-}
-
 const Cover: React.FC = () => {
   const [selectedBallIndex, setSelectedBallIndex] = useState(0);
   const { gameState, setGameState, setBallSelection } = useContext(GameContext);
 
-  const balls = [
-    { component: Model, position: [0, 0, 0], clickable: true },
-    { component: BlackBallModel, position: [0, 0, 0] },
+  interface Ball {
+    component: React.FC<{
+      position: [number, number, number];
+      onCollide: () => void;
+      clickable?: boolean; // add clickable as an optional property
+    }>;
+    position: [number, number, number];
+    clickable?: boolean;
+  }
+
+  const balls: Ball[] = [
+    {
+      component: ({ position, onCollide, clickable }) => (
+        <Model
+          position={position}
+          onCollide={onCollide}
+          clickable={clickable}
+        />
+      ),
+      position: [0, 0, 0],
+      clickable: true,
+    },
+    {
+      component: ({ position, onCollide }) => (
+        <BlackBallModel position={position} onCollide={onCollide} />
+      ),
+      position: [0, 0, 0],
+    },
   ];
 
   const Home: React.FC = () => {
