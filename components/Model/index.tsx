@@ -15,16 +15,11 @@ const Model: React.FC<ModelProps> = ({ position, onCollide, clickable }) => {
   const { gameState } = useContext(GameContext);
   const { nodes, materials } = useGLTF("../models/Football.glb");
 
-  Model.defaultProps = {
-    onCollide: () => {},
-  };
-
   const [ref, api] = useSphere<SphereProps>(() => ({
     mass: 1,
     position: position,
     args: [size.length() / 2],
     material: { restitution: 1.2 },
-    onCollide: onCollide,
   }));
 
   useFrame(({ scene }) => {
