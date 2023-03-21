@@ -31,7 +31,12 @@ const Cover: React.FC = () => {
   const { gameState, setGameState, setBallSelection } = useContext(GameContext);
 
   const balls: Ball[] = [
-    { component: Model, position: [0, 0, 0], clickable: true },
+    {
+      component: Model,
+      position: [0, 0, 0],
+      clickable: true,
+      onCollide: undefined,
+    },
     { component: BlackBallModel, position: [0, 0, 0] },
   ];
 
