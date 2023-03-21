@@ -1,25 +1,20 @@
 import React, { useRef, useEffect, useMemo, useContext } from "react";
 import { useGLTF } from "@react-three/drei";
 import { Box3, Vector3 } from "three";
-import { useSphere, SphereProps } from "@react-three/cannon";
+import { useSphere } from "@react-three/cannon";
 import { useFrame } from "@react-three/fiber";
 import GameContext from "@/context";
 
-interface ModelProps {
-  position: [number, number, number];
-  onCollide?: (e: any, child: any) => void;
-  clickable?: boolean;
-}
-
-const Model: React.FC<ModelProps> = ({ position, onCollide, clickable }) => {
+const Model = ({ position, onCollide, clickable, ...props }) => {
   const { gameState } = useContext(GameContext);
   const { nodes, materials } = useGLTF("../models/Football.glb");
 
-  const [ref, api] = useSphere<SphereProps>(() => ({
+  const [ref, api] = useSphere(() => ({
     mass: 1,
     position: position,
     args: [size.length() / 2],
     material: { restitution: 1.2 },
+    ...props,
   }));
 
   useFrame(({ scene }) => {
@@ -44,22 +39,17 @@ const Model: React.FC<ModelProps> = ({ position, onCollide, clickable }) => {
     }
   }, [gameState, api]);
 
-  const targetPosition = useRef<Vector3>(new Vector3(...position));
+  const targetPosition = useRef(new Vector3(...position));
 
   // Calculate the bounding box of the mesh
-  const box = useMemo<Box3>(
-    () => new Box3().setFromObject(nodes.Solid),
-    [nodes.Solid]
-  );
+  const box = new Box3().setFromObject(nodes.Solid);
 
   // Calculate the size of the bounding box
-  const size = useMemo<Vector3>(() => new Vector3(), []);
-
+  const size = new Vector3();
   box.getSize(size);
 
   // Calculate the center of the bounding box
-  const center = useMemo<Vector3>(() => new Vector3(), []);
-
+  const center = new Vector3();
   box.getCenter(center);
 
   useEffect(() => {
@@ -94,7 +84,7 @@ const Model: React.FC<ModelProps> = ({ position, onCollide, clickable }) => {
       dispose={null}
       position={[-center.x, -center.y, -center.z]}
       scale={[0.3, 0.3, 0.3]}
-      onClick={clickable ? handleClick : undefined}
+      onClick={clickable ? handleClick : null}
     >
       <group position={[0, 0, -0.01]} rotation={[-Math.PI, 0, -Math.PI]}>
         <mesh
