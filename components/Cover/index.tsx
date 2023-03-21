@@ -272,7 +272,12 @@ const Cover: React.FC = () => {
             }
           }
         `}</style>
-        <Play />
+        <Play
+          ball={selectedBall.component({
+            position: [0, 0, 0],
+            onCollide: () => {},
+          })}
+        />
       </>
     );
   };
