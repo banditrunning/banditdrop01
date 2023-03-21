@@ -5,13 +5,17 @@ import RightArrow from "../RightArrow";
 import LeftArrow from "../LeftArrow";
 
 const BallSelection = ({ selectedBallIndex, setSelectedBallIndex, balls }) => {
-  const BallComponent = memo(balls[selectedBallIndex].component);
+  const actualSelectedBallIndex =
+    selectedBallIndex === null ? 0 : selectedBallIndex;
+  const BallComponent = memo(balls[actualSelectedBallIndex].component);
 
   const handleArrowClick = (direction) => {
     if (direction === "left") {
-      setSelectedBallIndex((index) => (index === 0 ? 1 : index - 1));
+      setSelectedBallIndex((index) => {
+        return index === 0 ? balls.length - 1 : index - 1;
+      });
     } else if (direction === "right") {
-      setSelectedBallIndex((index) => (index === 1 ? 0 : index + 1));
+      setSelectedBallIndex((index) => (index + 1) % balls.length);
     }
   };
 
@@ -42,7 +46,7 @@ const BallSelection = ({ selectedBallIndex, setSelectedBallIndex, balls }) => {
         <ambientLight intensity={0.5} />
         <Physics>
           <BallComponent
-            position={balls[selectedBallIndex].position}
+            position={balls[actualSelectedBallIndex].position}
             selected={true}
           />
         </Physics>

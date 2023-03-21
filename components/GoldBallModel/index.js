@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useMemo, useContext, useState } from "react";
 import { useGLTF } from "@react-three/drei";
-import { Box3, Vector3 } from "three";
+import { Box3, Vector3, MeshStandardMaterial } from "three";
 import { useSphere } from "@react-three/cannon";
 import { useFrame } from "@react-three/fiber";
 import GameContext from "@/context";
@@ -86,13 +86,27 @@ const Model = ({ position, onCollide, clickable, ...props }) => {
           castShadow
           receiveShadow
           geometry={nodes.Solid.geometry}
-          material={materials.White}
+          material={
+            new MeshStandardMaterial({
+              color: "#39FF14",
+              roughness: 0,
+              metalness: 0.25,
+            })
+          }
         />
         <mesh
           castShadow
           receiveShadow
           geometry={nodes.Solid_1.geometry}
-          material={materials.Black}
+          material={
+            new MeshStandardMaterial({
+              color: "#39FF14",
+              roughness: 0,
+              metalness: 0,
+              emissive: "#39FF14",
+              emissiveIntensity: 1,
+            })
+          }
         />
         <mesh
           castShadow

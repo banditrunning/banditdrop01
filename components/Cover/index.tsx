@@ -14,18 +14,19 @@ import GameContext from "@/context";
 import LeftArrow from "../LeftArrow";
 import Model from "../Model";
 import BlackBallModel from "../BlackBallModel";
+import GoldBallModel from "../GoldBallModel";
 import BallSelection from "../BallSelection";
 import Play from "../Play";
 
 const Cover: React.FC = () => {
-  const [selectedBallIndex, setSelectedBallIndex] = useState(0);
+  const { selectedBallIndex, setSelectedBallIndex } = useContext(GameContext);
   const { gameState, setGameState, setBallSelection } = useContext(GameContext);
 
   interface Ball {
     component: React.FC<{
       position: [number, number, number];
       onCollide: () => void;
-      clickable?: boolean; // add clickable as an optional property
+      clickable?: boolean;
     }>;
     position: [number, number, number];
     clickable?: boolean;
@@ -44,10 +45,26 @@ const Cover: React.FC = () => {
       clickable: true,
     },
     {
-      component: ({ position, onCollide }) => (
-        <BlackBallModel position={position} onCollide={onCollide} />
+      component: ({ position, onCollide, clickable }) => (
+        <BlackBallModel
+          position={position}
+          onCollide={onCollide}
+          clickable={clickable}
+        />
       ),
       position: [0, 0, 0],
+      clickable: true,
+    },
+    {
+      component: ({ position, onCollide, clickable }) => (
+        <GoldBallModel
+          position={position}
+          onCollide={onCollide}
+          clickable={clickable}
+        />
+      ),
+      position: [0, 0, 0],
+      clickable: true,
     },
   ];
 
@@ -267,7 +284,12 @@ const Cover: React.FC = () => {
             }
           }
         `}</style>
-        <Play ball={selectedBall} />
+        <Play
+          ball={selectedBall.component({
+            position: [0, 0, 0],
+            onCollide: () => {},
+          })}
+        />
       </>
     );
   };
@@ -280,7 +302,7 @@ const Cover: React.FC = () => {
 
   const handlePlayTap = () => {
     setGameState("gameplay");
-    setSelectedBallIndex(0);
+    console.log(selectedBallIndex);
   };
 
   return (

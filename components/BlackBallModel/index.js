@@ -1,43 +1,36 @@
-import React, { useRef, useEffect, useContext } from "react";
+import React, { useRef, useEffect, useMemo, useContext, useState } from "react";
 import { useGLTF } from "@react-three/drei";
 import { Box3, Vector3 } from "three";
 import { useSphere } from "@react-three/cannon";
 import { useFrame } from "@react-three/fiber";
 import GameContext from "@/context";
 
-const BlackBallModel = ({ position, onCollide, ...props }) => {
+const Model = ({ position, onCollide, clickable, ...props }) => {
   const { gameState } = useContext(GameContext);
   const { nodes, materials } = useGLTF("../models/Football.glb");
 
   const [ref, api] = useSphere(() => ({
-    mass: 1,
+    mass: gameState === "selection" ? 0 : 1,
     position: position,
     args: [size.length() / 2],
     material: { restitution: 1.2 },
     ...props,
   }));
 
+  const [inAir, setInAir] = useState(false);
+
   useFrame(({ scene }) => {
     if (ref.current) {
       // Update the mesh rotation to match the physics body rotation
-      ref.current.rotation.copy(ref.current.children[0].quaternion);
+
+      // Check if the ball is in the air
+      if (ref.current.position.y > 0) {
+        setInAir(true);
+      } else {
+        setInAir(false);
+      }
     }
   });
-
-  useEffect(() => {
-    if (gameState === "selection") {
-      api.position.set(0, 0, 0);
-      api.velocity.set(0, 0, 0);
-      api.angularVelocity.set(0, 1, 0);
-      api.mass.set(0);
-    } else if (gameState === "home") {
-      api.position.set(0, 3, 0);
-      api.velocity.set(0, 1, 0);
-      api.rotation.set(0, 0, 0);
-      api.angularVelocity.set(0, 0, 0);
-      api.mass.set(1);
-    }
-  }, [gameState, api]);
 
   const targetPosition = useRef(new Vector3(...position));
 
@@ -51,8 +44,6 @@ const BlackBallModel = ({ position, onCollide, ...props }) => {
   // Calculate the center of the bounding box
   const center = new Vector3();
   box.getCenter(center);
-
-  // Add physics to the model
 
   useEffect(() => {
     targetPosition.current.set(...position);
@@ -74,12 +65,21 @@ const BlackBallModel = ({ position, onCollide, ...props }) => {
     };
   }, [ref, onCollide]);
 
+  function handleTap() {
+    const upwardForce = [0, 150, 0];
+    const spinTorque = [0, inAir ? -10 : 0, 0]; // apply a torque around the y-axis if in air
+    const worldPoint = [0, 0, 0];
+    api.applyForce(upwardForce, worldPoint);
+    api.applyTorque(spinTorque); // apply the torque
+  }
+
   return (
     <group
       ref={ref}
       dispose={null}
       position={[-center.x, -center.y, -center.z]}
       scale={[0.3, 0.3, 0.3]}
+      onPointerUp={clickable ? handleTap : null}
     >
       <group position={[0, 0, -0.01]} rotation={[-Math.PI, 0, -Math.PI]}>
         <mesh
@@ -104,6 +104,5 @@ const BlackBallModel = ({ position, onCollide, ...props }) => {
     </group>
   );
 };
-
 useGLTF.preload("../models/Football.glb");
-export default BlackBallModel;
+export default Model;

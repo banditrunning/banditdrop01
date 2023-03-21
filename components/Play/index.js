@@ -10,6 +10,8 @@ import { Canvas, extend, useFrame, useThree } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import { Physics, usePlane, useSphere } from "@react-three/cannon";
 import Model from "/components/Model";
+import BlackBallModel from "/components/BlackBallModel";
+import GoldBallModel from "/components/GoldBallModel";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as THREE from "three";
 import GameContext from "@/context";
@@ -71,9 +73,8 @@ const CameraControls = () => {
 };
 
 const ThreeScene = ({ isClient, ball }) => {
-  const { gameState, selectedBall } = useContext(GameContext);
+  const { gameState, selectedBallIndex } = useContext(GameContext);
   const [modelPosition, setModelPosition] = useState([0, 3, 0]);
-  const [selectedBallIndex, setSelectedBallIndex] = useState(0);
 
   useEffect(() => {
     if (gameState === "selection") {
@@ -160,12 +161,12 @@ const ThreeScene = ({ isClient, ball }) => {
         <directionalLight intensity={0.1} />
         <Suspense fallback={null}>
           <Physics gravity={[0, -15, 0]}>
-            <Model
-              ball={selectedBall}
+            <GoldBallModel
               position={modelPosition}
               onCollide={handleCollision}
               clickable
             />
+
             <Ground position={groundPosition} />
           </Physics>
           <Environment preset="city" background={false} />
