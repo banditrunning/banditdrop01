@@ -108,7 +108,7 @@ const BallSelection = ({ balls }) => {
           marginRight: "auto",
           zIndex: "101",
           fontSize: "24px",
-          fontFamily: "TomatoGrotesk-Regular",
+          fontFamily: "grotesk-regular",
           textTransform: "uppercase",
           color: "white",
           padding: "10px 20px",
