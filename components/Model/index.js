@@ -72,10 +72,12 @@ const Model = ({ position, onCollide, clickable, ...props }) => {
     };
   }, [ref, onCollide]);
 
-  function handleClick() {
+  function handleTap(event) {
     const upwardForce = [0, 200, 0];
+    const spinTorque = [0, 10, 0]; // apply a torque around the y-axis
     const worldPoint = [0, 0, 0];
     api.applyForce(upwardForce, worldPoint);
+    api.applyTorque(spinTorque); // apply the torque
   }
 
   return (
@@ -84,7 +86,7 @@ const Model = ({ position, onCollide, clickable, ...props }) => {
       dispose={null}
       position={[-center.x, -center.y, -center.z]}
       scale={[0.3, 0.3, 0.3]}
-      onClick={clickable ? handleClick : null}
+      onPointerUp={clickable ? handleTap : null}
     >
       <group position={[0, 0, -0.01]} rotation={[-Math.PI, 0, -Math.PI]}>
         <mesh
