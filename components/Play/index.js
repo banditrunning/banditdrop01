@@ -11,7 +11,6 @@ import { Environment } from "@react-three/drei";
 import { Physics, usePlane, useSphere } from "@react-three/cannon";
 import Model from "/components/Model";
 import BlackBallModel from "/components/BlackBallModel";
-import GoldBallModel from "/components/GoldBallModel";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as THREE from "three";
 import GameContext from "@/context";
@@ -160,8 +159,8 @@ const ThreeScene = ({ isClient, ball }) => {
         <ambientLight intensity={0.1} />
         <directionalLight intensity={0.1} />
         <Suspense fallback={null}>
-          <Physics gravity={[0, -15, 0]}>
-            <GoldBallModel
+          <Physics gravity={[0, -12, 0]}>
+            <Model
               position={modelPosition}
               onCollide={handleCollision}
               clickable
@@ -188,7 +187,7 @@ const Play = ({ ball }) => {
     return null;
   }
 
-  return <ThreeScene isClient={isClient} ball={ball} />;
+  return <ThreeScene isClient={isClient} />;
 };
 
 export default Play;

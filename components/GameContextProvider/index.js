@@ -3,7 +3,6 @@ import GameContext from "../../context";
 
 const GameContextProvider = ({ children }) => {
   const [gameState, setGameState] = useState("home");
-  const [ballSelection, setBallSelection] = useState(null);
   const [selectedBallIndex, setSelectedBallIndex] = useState(null);
 
   return (
@@ -11,8 +10,6 @@ const GameContextProvider = ({ children }) => {
       value={{
         gameState,
         setGameState,
-        ballSelection,
-        setBallSelection,
         selectedBallIndex,
         setSelectedBallIndex,
       }}

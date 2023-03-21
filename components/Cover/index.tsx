@@ -14,7 +14,6 @@ import GameContext from "@/context";
 import LeftArrow from "../LeftArrow";
 import Model from "../Model";
 import BlackBallModel from "../BlackBallModel";
-import GoldBallModel from "../GoldBallModel";
 import BallSelection from "../BallSelection";
 import Play from "../Play";
 
@@ -47,17 +46,6 @@ const Cover: React.FC = () => {
     {
       component: ({ position, onCollide, clickable }) => (
         <BlackBallModel
-          position={position}
-          onCollide={onCollide}
-          clickable={clickable}
-        />
-      ),
-      position: [0, 0, 0],
-      clickable: true,
-    },
-    {
-      component: ({ position, onCollide, clickable }) => (
-        <GoldBallModel
           position={position}
           onCollide={onCollide}
           clickable={clickable}
@@ -284,12 +272,7 @@ const Cover: React.FC = () => {
             }
           }
         `}</style>
-        <Play
-          ball={selectedBall.component({
-            position: [0, 0, 0],
-            onCollide: () => {},
-          })}
-        />
+        <Play />
       </>
     );
   };
