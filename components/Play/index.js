@@ -71,7 +71,7 @@ const CameraControls = () => {
   );
 };
 
-const ThreeScene = ({ isClient, ball }) => {
+const ThreeScene = ({ isClient }) => {
   const { gameState, selectedBallIndex } = useContext(GameContext);
   const [modelPosition, setModelPosition] = useState([0, 3, 0]);
 
@@ -159,16 +159,23 @@ const ThreeScene = ({ isClient, ball }) => {
         <ambientLight intensity={0.1} />
         <directionalLight intensity={0.1} />
         <Suspense fallback={null}>
-          <Physics gravity={[0, -12, 0]}>
-            <Model
-              position={modelPosition}
-              onCollide={handleCollision}
-              clickable
-            />
-
+          <Physics>
+            {selectedBallIndex === 0 ? (
+              <Model
+                position={modelPosition}
+                onCollide={handleCollision}
+                clickable
+              />
+            ) : (
+              <BlackBallModel
+                position={modelPosition}
+                onCollide={handleCollision}
+                clickable
+              />
+            )}
             <Ground position={groundPosition} />
+            <Environment preset="city" background={false} />
           </Physics>
-          <Environment preset="city" background={false} />
         </Suspense>
         <CameraControls />
       </Canvas>

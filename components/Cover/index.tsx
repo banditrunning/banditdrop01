@@ -16,6 +16,7 @@ import Model from "../Model";
 import BlackBallModel from "../BlackBallModel";
 import BallSelection from "../BallSelection";
 import Play from "../Play";
+import CounterBoard from "../CounterBoard";
 
 const Cover: React.FC = () => {
   const { selectedBallIndex, setSelectedBallIndex } = useContext(GameContext);
@@ -82,7 +83,7 @@ const Cover: React.FC = () => {
     return (
       <>
         <div
-          className={`font-GroteskRegular text-white uppercase text-7xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden ${
+          className={`font-GroteskRegular text-white uppercase text-7xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden px-4 ${
             showContent
               ? "opacity-100 transition-opacity duration-1000 ease-in"
               : "opacity-0"
@@ -156,7 +157,7 @@ const Cover: React.FC = () => {
     const Header = memo(function Header({ text }: { text: string }) {
       return (
         <div
-          className={`font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden ${
+          className={`font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden px-4 ${
             text
               ? "opacity-100 transition-opacity duration-500 ease-in"
               : "opacity-0"
@@ -169,32 +170,10 @@ const Cover: React.FC = () => {
       );
     });
 
-    interface PlayButtonProps {
-      onClick: () => void;
-    }
-
-    const PlayButton = memo(function PlayButton({ onClick }: PlayButtonProps) {
-      return (
-        <div className="w-full fixed bottom-4 left-0 right-0 px-4 z-[101] opacity-100 transition-opacity duration-500 ease-in">
-          <button
-            className="relative uppercase text-white font-GroteskRegular text-2xl bg-[#C97900] w-full flex flex-row items-center justify-center py-2 rounded-md"
-            onClick={onClick}
-          >
-            Play <LeftArrow />
-          </button>
-        </div>
-      );
-    });
-
     return (
       <>
         <Header text="Pick Your Poison" />
-        <PlayButton onClick={handlePlayTap} />
-        <BallSelection
-          selectedBallIndex={selectedBallIndex}
-          setSelectedBallIndex={setSelectedBallIndex}
-          balls={balls}
-        />
+        <BallSelection balls={balls} />
       </>
     );
   };
@@ -231,14 +210,13 @@ const Cover: React.FC = () => {
     return (
       <>
         <div
-          className={`font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden ${
+          className={`font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden w-full ${
             showContent
               ? "opacity-100 transition-opacity duration-1000 ease-in"
               : "opacity-0"
           }`}
         >
-          <div>Don&apos;t Let</div>
-          <div>It Drop</div>
+          <CounterBoard />
         </div>
         <div
           className={`w-full fixed bottom-[-100%] left-0 right-0 ${

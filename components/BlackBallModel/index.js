@@ -4,10 +4,14 @@ import { Box3, Vector3 } from "three";
 import { useSphere } from "@react-three/cannon";
 import { useFrame } from "@react-three/fiber";
 import GameContext from "@/context";
+import { useGesture } from "react-use-gesture";
+import { useSound } from "use-sound";
+import kick from "public/sounds/kick.mp4";
 
-const Model = ({ position, onCollide, clickable, ...props }) => {
+function Model({ position, onCollide, clickable, ...props }) {
   const { gameState } = useContext(GameContext);
   const { nodes, materials } = useGLTF("../models/Football.glb");
+  const [playKickSound] = useSound(kick);
 
   const [ref, api] = useSphere(() => ({
     mass: gameState === "selection" ? 0 : 1,
@@ -65,13 +69,16 @@ const Model = ({ position, onCollide, clickable, ...props }) => {
     };
   }, [ref, onCollide]);
 
-  function handleTap() {
-    const upwardForce = [0, 150, 0];
-    const spinTorque = [0, inAir ? -10 : 0, 0]; // apply a torque around the y-axis if in air
-    const worldPoint = [0, 0, 0];
-    api.applyForce(upwardForce, worldPoint);
-    api.applyTorque(spinTorque); // apply the torque
-  }
+  const bind = useGesture({
+    onPointerUp: () => {
+      const upwardForce = [0, 150, 0];
+      const spinTorque = [0, inAir ? -10 : 0, 0]; // apply a torque around the y-axis if in air
+      const worldPoint = [0, 0, 0];
+      api.applyForce(upwardForce, worldPoint);
+      api.applyTorque(spinTorque); // apply the torque
+      playKickSound(); // play the kick sound effect
+    },
+  });
 
   return (
     <group
@@ -79,7 +86,7 @@ const Model = ({ position, onCollide, clickable, ...props }) => {
       dispose={null}
       position={[-center.x, -center.y, -center.z]}
       scale={[0.3, 0.3, 0.3]}
-      onPointerUp={clickable ? handleTap : null}
+      {...bind()}
     >
       <group position={[0, 0, -0.01]} rotation={[-Math.PI, 0, -Math.PI]}>
         <mesh
@@ -103,6 +110,6 @@ const Model = ({ position, onCollide, clickable, ...props }) => {
       </group>
     </group>
   );
-};
+}
 useGLTF.preload("../models/Football.glb");
 export default Model;

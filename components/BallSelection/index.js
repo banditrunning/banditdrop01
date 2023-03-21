@@ -1,13 +1,20 @@
-import React, { useState, memo } from "react";
+import React, { useState, useMemo, useContext, memo } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/cannon";
 import RightArrow from "../RightArrow";
 import LeftArrow from "../LeftArrow";
+import GameContext from "@/context";
 
-const BallSelection = ({ selectedBallIndex, setSelectedBallIndex, balls }) => {
-  const actualSelectedBallIndex =
-    selectedBallIndex === null ? 0 : selectedBallIndex;
-  const BallComponent = memo(balls[actualSelectedBallIndex].component);
+const BallSelection = ({ balls }) => {
+  const { selectedBallIndex, setSelectedBallIndex, setGameState } =
+    useContext(GameContext);
+
+  const BallComponent = useMemo(() => {
+    if (balls && balls[selectedBallIndex]) {
+      return memo(balls[selectedBallIndex].component);
+    }
+    return null;
+  }, [balls, selectedBallIndex]);
 
   const handleArrowClick = (direction) => {
     if (direction === "left") {
@@ -17,6 +24,12 @@ const BallSelection = ({ selectedBallIndex, setSelectedBallIndex, balls }) => {
     } else if (direction === "right") {
       setSelectedBallIndex((index) => (index + 1) % balls.length);
     }
+  };
+
+  const handlePlayTap = () => {
+    setGameState("gameplay");
+    setSelectedBallIndex(selectedBallIndex);
+    console.log("selectedBallIndex", selectedBallIndex);
   };
 
   return (
@@ -38,17 +51,14 @@ const BallSelection = ({ selectedBallIndex, setSelectedBallIndex, balls }) => {
       <Canvas camera={{ position: [0, 0, 3], fov: 50 }}>
         <spotLight
           position={[0, 20, 10]}
-          intensity={0.5}
+          intensity={0.75}
           angle={Math.PI / 6}
           penumbra={1}
           castShadow
         />
         <ambientLight intensity={0.5} />
         <Physics>
-          <BallComponent
-            position={balls[actualSelectedBallIndex].position}
-            selected={true}
-          />
+          <BallComponent position={[0, 0, 0]} selected={true} />
         </Physics>
       </Canvas>
       <div
@@ -64,11 +74,12 @@ const BallSelection = ({ selectedBallIndex, setSelectedBallIndex, balls }) => {
       <button
         onClick={() => handleArrowClick("left")}
         style={{
-          position: "absolute",
+          position: "fixed",
           left: "0",
           zIndex: "101",
           fontSize: "24px",
           color: "white",
+          marginLeft: "20px",
         }}
       >
         <RightArrow size={40} />
@@ -76,14 +87,41 @@ const BallSelection = ({ selectedBallIndex, setSelectedBallIndex, balls }) => {
       <button
         onClick={() => handleArrowClick("right")}
         style={{
-          position: "absolute",
+          position: "fixed",
           right: "0",
           zIndex: "101",
           fontSize: "24px",
           color: "white",
+          marginRight: "20px",
         }}
       >
         <LeftArrow size={40} />
+      </button>
+      <button
+        onClick={handlePlayTap}
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          left: "0",
+          right: "0",
+          marginLeft: "auto",
+          marginRight: "auto",
+          zIndex: "101",
+          fontSize: "24px",
+          fontFamily: "TomatoGrotesk-Regular",
+          textTransform: "uppercase",
+          color: "white",
+          padding: "10px 20px",
+          borderRadius: "5px",
+          backgroundColor: "#C97900",
+          width: "92%",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        Play <LeftArrow />
       </button>
     </div>
   );
