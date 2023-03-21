@@ -73,7 +73,7 @@ const Model = ({ position, onCollide, clickable, ...props }) => {
   }, [ref, onCollide]);
 
   function handleClick() {
-    const upwardForce = [0, 100, 0];
+    const upwardForce = [0, 200, 0];
     const worldPoint = [0, 0, 0];
     api.applyForce(upwardForce, worldPoint);
   }
