@@ -14,6 +14,7 @@ import BlackBallModel from "/components/BlackBallModel";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as THREE from "three";
 import GameContext from "@/context";
+import CounterBoard from "../CounterBoard";
 
 extend({ OrbitControls });
 
@@ -71,7 +72,7 @@ const CameraControls = () => {
   );
 };
 
-const ThreeScene = ({ isClient }) => {
+const ThreeScene = ({ isClient, tapCount, setTapCount }) => {
   const { gameState, selectedBallIndex } = useContext(GameContext);
   const [modelPosition, setModelPosition] = useState([0, 3, 0]);
 
@@ -124,6 +125,8 @@ const ThreeScene = ({ isClient }) => {
     meshRef.parent.setAngularVelocity(randomAngularVelocity);
   }, []);
 
+  console.log("tapCount", tapCount);
+
   return (
     <div
       style={{
@@ -165,12 +168,15 @@ const ThreeScene = ({ isClient }) => {
                 position={modelPosition}
                 onCollide={handleCollision}
                 clickable
+                setTapCount={setTapCount}
+                tapCount={tapCount} // Pass the callback function as a prop to Model
               />
             ) : (
               <BlackBallModel
                 position={modelPosition}
                 onCollide={handleCollision}
                 clickable
+                incrementTapCount={incrementTapCount} // Pass the callback function as a prop to BlackBallModel
               />
             )}
             <Ground position={groundPosition} />
@@ -185,6 +191,7 @@ const ThreeScene = ({ isClient }) => {
 
 const Play = ({ ball }) => {
   const [isClient, setIsClient] = useState(false);
+  const [tapCount, setTapCount] = useState(0); // Initialize tapCount state with a value of 0
 
   useEffect(() => {
     setIsClient(true);
@@ -194,7 +201,18 @@ const Play = ({ ball }) => {
     return null;
   }
 
-  return <ThreeScene isClient={isClient} />;
+  return (
+    <>
+      <ThreeScene
+        isClient={isClient}
+        setTapCount={setTapCount}
+        tapCount={tapCount}
+      />
+      <div className="w-full top-[74px] left-0 right-0 fixed">
+        <CounterBoard tapCount={tapCount} />
+      </div>
+    </>
+  );
 };
 
 export default Play;

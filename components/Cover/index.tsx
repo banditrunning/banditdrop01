@@ -16,7 +16,6 @@ import Model from "../Model";
 import BlackBallModel from "../BlackBallModel";
 import BallSelection from "../BallSelection";
 import Play from "../Play";
-import CounterBoard from "../CounterBoard";
 
 const Cover: React.FC = () => {
   const { selectedBallIndex, setSelectedBallIndex } = useContext(GameContext);
@@ -209,15 +208,7 @@ const Cover: React.FC = () => {
     );
     return (
       <>
-        <div
-          className={`font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden w-full ${
-            showContent
-              ? "opacity-100 transition-opacity duration-1000 ease-in"
-              : "opacity-0"
-          }`}
-        >
-          <CounterBoard />
-        </div>
+        <div className="font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden w-full"></div>
         <div
           className={`w-full fixed bottom-[-100%] left-0 right-0 ${
             showMarquee ? "marquee-show-animation duration-1000 ease-out" : ""
@@ -259,16 +250,11 @@ const Cover: React.FC = () => {
       </>
     );
   };
-
+  const MemoizedGameplay = memo(Gameplay);
   Gameplay.displayName = "Gameplay";
 
   const handleScreenTap = () => {
     setGameState("selection");
-  };
-
-  const handlePlayTap = () => {
-    setGameState("gameplay");
-    console.log(selectedBallIndex);
   };
 
   return (
@@ -281,7 +267,7 @@ const Cover: React.FC = () => {
         />
       )}
       {gameState === "gameplay" && (
-        <Gameplay selectedBall={balls[selectedBallIndex]} />
+        <MemoizedGameplay selectedBall={balls[selectedBallIndex]} />
       )}
     </div>
   );
