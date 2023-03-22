@@ -125,8 +125,6 @@ const ThreeScene = ({ isClient, tapCount, setTapCount }) => {
     meshRef.parent.setAngularVelocity(randomAngularVelocity);
   }, []);
 
-  console.log("tapCount", tapCount);
-
   return (
     <div
       style={{
@@ -176,7 +174,8 @@ const ThreeScene = ({ isClient, tapCount, setTapCount }) => {
                 position={modelPosition}
                 onCollide={handleCollision}
                 clickable
-                incrementTapCount={incrementTapCount} // Pass the callback function as a prop to BlackBallModel
+                setTapCount={setTapCount}
+                tapCount={tapCount} // Pass the callback function as a prop to Model
               />
             )}
             <Ground position={groundPosition} />

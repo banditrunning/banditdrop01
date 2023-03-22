@@ -78,7 +78,7 @@ function Model({
 
   const bind = useGesture({
     onPointerUp: () => {
-      const upwardForce = [0, 150, 0];
+      const upwardForce = [0, 100, 0];
       const spinTorque = [0, inAir ? -10 : 0, 0]; // apply a torque around the y-axis if in air
       const worldPoint = [0, 0, 0];
       api.applyForce(upwardForce, worldPoint);
