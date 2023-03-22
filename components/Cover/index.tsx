@@ -26,6 +26,8 @@ const Cover: React.FC = () => {
       position: [number, number, number];
       onCollide: () => void;
       clickable?: boolean;
+      tapCount?: number;
+      setTapCount?: React.Dispatch<React.SetStateAction<number>>;
     }>;
     position: [number, number, number];
     clickable?: boolean;
@@ -33,11 +35,19 @@ const Cover: React.FC = () => {
 
   const balls: Ball[] = [
     {
-      component: ({ position, onCollide, clickable }) => (
+      component: ({
+        position,
+        onCollide,
+        clickable,
+        tapCount,
+        setTapCount,
+      }) => (
         <Model
           position={position}
           onCollide={onCollide}
           clickable={clickable}
+          tapCount={tapCount}
+          setTapCount={setTapCount}
         />
       ),
       position: [0, 0, 0],
@@ -49,6 +59,8 @@ const Cover: React.FC = () => {
           position={position}
           onCollide={onCollide}
           clickable={clickable}
+          tapCount={tapCount}
+          setTapCount={setTapCount}
         />
       ),
       position: [0, 0, 0],

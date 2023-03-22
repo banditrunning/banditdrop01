@@ -8,8 +8,15 @@ import { useGesture } from "react-use-gesture";
 import { useSound } from "use-sound";
 import kick from "public/sounds/kick.mp4";
 
-function Model({ position, onCollide, clickable, ...props }) {
-  const { gameState } = useContext(GameContext);
+function Model({
+  position,
+  onCollide,
+  clickable,
+  tapCount,
+  setTapCount,
+  ...props
+}) {
+  const { gameState } = useContext(GameContext); // Access the gameState variable from context
   const { nodes, materials } = useGLTF("../models/Football.glb");
   const [playKickSound] = useSound(kick);
 
@@ -77,6 +84,8 @@ function Model({ position, onCollide, clickable, ...props }) {
       api.applyForce(upwardForce, worldPoint);
       api.applyTorque(spinTorque); // apply the torque
       playKickSound(); // play the kick sound effect
+      // Increment the tap count and store it locally
+      setTapCount(tapCount + 1);
     },
   });
 
@@ -112,4 +121,4 @@ function Model({ position, onCollide, clickable, ...props }) {
   );
 }
 useGLTF.preload("../models/Football.glb");
-export default Model;
+export default React.memo(Model);
