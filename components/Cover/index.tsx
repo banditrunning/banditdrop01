@@ -31,6 +31,8 @@ const Cover: React.FC = () => {
     }>;
     position: [number, number, number];
     clickable?: boolean;
+    tapCount?: number;
+    setTapCount?: React.Dispatch<React.SetStateAction<number>>;
   }
 
   const balls: Ball[] = [
@@ -54,7 +56,13 @@ const Cover: React.FC = () => {
       clickable: true,
     },
     {
-      component: ({ position, onCollide, clickable }) => (
+      component: ({
+        position,
+        onCollide,
+        clickable,
+        tapCount,
+        setTapCount,
+      }) => (
         <BlackBallModel
           position={position}
           onCollide={onCollide}
