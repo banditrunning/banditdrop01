@@ -7,6 +7,7 @@ import GameContext from "@/context";
 import { useGesture } from "react-use-gesture";
 import { useSound } from "use-sound";
 import kick from "public/sounds/kick.mp4";
+import * as THREE from "three";
 
 function Model({
   position,
@@ -81,23 +82,54 @@ function Model({
   const bind = useGesture({
     onPointerUp: () => {
       const upwardForce = [0, 150, 0];
-      const randomX = (Math.random() - 0.5) * 2; // generates a random number between -1 and 1
-      const sideForce = [50 * randomX, 0, 0]; // applies a force along a random x direction
-      const spinTorque = [0, inAir ? -10 : 0, 0]; // apply a torque around the y-axis if in air
       const worldPoint = [0, 0, 0];
+
       if (api) {
         // check if api is defined
         api.applyForce(upwardForce, worldPoint);
-
-        api.applyTorque(spinTorque); // apply the torque
         playKickSound(); // play the kick sound effect
       }
+
       // Increment the tap count and store it locally
       {
         gameState === "gameplay" && setTapCount(tapCount + 1);
       }
+
+      {
+        inAir === false;
+        angularVelocity === [0, 0, 0];
+      }
     },
   });
+
+  const [angularVelocity, setAngularVelocity] = useState([0, 0, 0]);
+
+  useEffect(() => {
+    if (api) {
+      // Set up the loop that applies the damping torque
+      const intervalId = setInterval(() => {
+        api.velocity.subscribe((velocity) => {
+          setAngularVelocity(velocity);
+        });
+      }, 1000 / 60); // Run the loop at 60 FPS
+
+      // Clean up the interval when the component unmounts
+      return () => clearInterval(intervalId);
+    }
+  }, [api]);
+
+  // Apply damping torque using useEffect
+  useEffect(() => {
+    if (api && inAir) {
+      const dampingFactor = -0.05; // adjust this value to control the amount of damping torque
+
+      // Calculate the damping torque
+      const dampingTorque = angularVelocity.map((v) => v * dampingFactor);
+
+      // Apply the damping torque
+      api.applyTorque(dampingTorque);
+    }
+  }, [api, angularVelocity]);
 
   return (
     <group
