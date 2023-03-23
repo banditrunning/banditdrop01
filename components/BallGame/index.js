@@ -158,7 +158,7 @@ const ThreeScene = ({ isClient }) => {
     Math.tan(((90 - fov / 2) * Math.PI) / 180) * cameraPosition[2];
 
   const groundY = distanceToBottom * aspect;
-  const offsetY = 2.4;
+  const offsetY = 3;
   const groundPosition = [0, -groundY + offsetY, 0];
 
   const [constantRotation, setConstantRotation] = useState(
