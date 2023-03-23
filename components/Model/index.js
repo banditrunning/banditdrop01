@@ -78,12 +78,15 @@ function Model({
 
   const bind = useGesture({
     onPointerUp: () => {
-      const upwardForce = [0, 115, 0];
+      const upwardForce = [0, 150, 0];
+      const randomX = (Math.random() - 0.5) * 2; // generates a random number between -1 and 1
+      const sideForce = [50 * randomX, 0, 0]; // applies a force along a random x direction
       const spinTorque = [0, inAir ? -10 : 0, 0]; // apply a torque around the y-axis if in air
       const worldPoint = [0, 0, 0];
       if (api) {
         // check if api is defined
         api.applyForce(upwardForce, worldPoint);
+        api.applyForce(sideForce, worldPoint);
         api.applyTorque(spinTorque); // apply the torque
         playKickSound(); // play the kick sound effect
       }
