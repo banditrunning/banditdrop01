@@ -72,9 +72,19 @@ const CameraControls = () => {
   );
 };
 
-const ThreeScene = ({ isClient, tapCount, setTapCount }) => {
+const ThreeScene = ({
+  isClient,
+  tapCount,
+  setTapCount,
+  gameOver,
+  setGameOver,
+}) => {
   const { gameState, selectedBallIndex } = useContext(GameContext);
   const [modelPosition, setModelPosition] = useState([0, 3, 0]);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [collisionCount, setCollisionCount] = useState(0);
+  const [hasCollidedAfterFirstTap, setHasCollidedAfterFirstTap] =
+    useState(false);
 
   useEffect(() => {
     if (gameState === "selection") {
@@ -99,31 +109,38 @@ const ThreeScene = ({ isClient, tapCount, setTapCount }) => {
     new THREE.Vector3(0, 0, 0)
   );
 
-  const handleCollision = useCallback((e, meshRef) => {
-    const contact = e.contact;
+  const tapCountRef = useRef(0);
 
-    if (!contact || !meshRef) {
-      return;
-    }
+  const handleCollision = useCallback(
+    (e, meshRef) => {
+      const contact = e.contact;
+      if (!contact || !meshRef) {
+        return;
+      }
 
-    const contactNormal = contact.normal;
-    const contactPoint = contact.contactPoint;
+      if (!hasStarted) {
+        setHasStarted(true);
+      }
 
-    meshRef.parent.applyImpulse(
-      contactNormal.clone().multiplyScalar(100),
-      contactPoint
-    );
+      setCollisionCount((count) => {
+        const updatedCount = count + 1;
+        console.log("Collision count:", updatedCount);
+        console.log(tapCountRef.current);
 
-    const randomAngularVelocity = new THREE.Vector3(
-      Math.random() * 20 - 10,
-      Math.random() * 20 - 10,
-      Math.random() * 20 - 10
-    );
+        if (tapCountRef.current >= 1 && count > 7) {
+          console.log("Game over!");
+          setGameOver(true);
+        }
 
-    setConstantRotation(randomAngularVelocity);
+        return updatedCount;
+      });
+    },
+    [hasStarted]
+  );
 
-    meshRef.parent.setAngularVelocity(randomAngularVelocity);
-  }, []);
+  useEffect(() => {
+    tapCountRef.current = tapCount;
+  }, [tapCount]);
 
   return (
     <div
@@ -160,22 +177,22 @@ const ThreeScene = ({ isClient, tapCount, setTapCount }) => {
         <ambientLight intensity={0.1} />
         <directionalLight intensity={0.1} />
         <Suspense fallback={null}>
-          <Physics>
+          <Physics gravity={[0, -10, 0]}>
             {selectedBallIndex === 0 ? (
               <Model
                 position={modelPosition}
-                onCollide={handleCollision}
+                onCollide={(e, meshRef) => handleCollision(e, meshRef)}
                 clickable
-                setTapCount={setTapCount}
-                tapCount={tapCount} // Pass the callback function as a prop to Model
+                setTapCount={gameState === "gameplay" && setTapCount}
+                tapCount={gameState === "gameplay" && tapCount}
               />
             ) : (
               <BlackBallModel
                 position={modelPosition}
-                onCollide={handleCollision}
+                onCollide={(e, meshRef) => handleCollision(e, meshRef)}
                 clickable
                 setTapCount={setTapCount}
-                tapCount={tapCount} // Pass the callback function as a prop to Model
+                tapCount={tapCount}
               />
             )}
             <Ground position={groundPosition} />
@@ -190,7 +207,8 @@ const ThreeScene = ({ isClient, tapCount, setTapCount }) => {
 
 const Play = ({ ball }) => {
   const [isClient, setIsClient] = useState(false);
-  const [tapCount, setTapCount] = useState(0); // Initialize tapCount state with a value of 0
+  const [tapCount, setTapCount] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -206,9 +224,10 @@ const Play = ({ ball }) => {
         isClient={isClient}
         setTapCount={setTapCount}
         tapCount={tapCount}
+        setGameOver={setGameOver}
       />
       <div className="w-full top-[74px] left-0 right-0 fixed">
-        <CounterBoard tapCount={tapCount} />
+        <CounterBoard tapCount={tapCount} gameOver={gameOver} />
       </div>
     </>
   );

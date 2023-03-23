@@ -165,55 +165,6 @@ const ThreeScene = ({ isClient }) => {
     new THREE.Vector3(0, 0, 0)
   );
 
-  const handleCollision = useCallback((e, meshRef) => {
-    const contact = e.contact;
-
-    if (!contact || !meshRef) {
-      return;
-    }
-
-    const contactNormal = contact.normal;
-    const contactPoint = contact.contactPoint;
-
-    meshRef.parent.applyImpulse(
-      contactNormal.clone().multiplyScalar(100),
-      contactPoint
-    );
-
-    const randomAngularVelocity = new THREE.Vector3(
-      Math.random() * 20 - 10,
-      Math.random() * 20 - 10,
-      Math.random() * 20 - 10
-    );
-
-    setConstantRotation(randomAngularVelocity);
-
-    meshRef.parent.setAngularVelocity(randomAngularVelocity);
-  }, []);
-
-  const balls = [
-    { position: [-1, 3, 0] },
-    { position: [0, 3, 0] },
-    { position: [1, 3, 0] },
-  ];
-
-  const handleSwipe = useCallback(
-    (event) => {
-      const delta = event.deltaX;
-
-      if (delta > 0) {
-        setSelectedBallIndex((index) =>
-          index === balls.length - 1 ? 0 : index + 1
-        );
-      } else if (delta < 0) {
-        setSelectedBallIndex((index) =>
-          index === 0 ? balls.length - 1 : index - 1
-        );
-      }
-    },
-    [balls.length]
-  );
-
   return (
     <div
       style={{
@@ -238,7 +189,6 @@ const ThreeScene = ({ isClient }) => {
           aspect: isClient ? window.innerWidth / window.innerHeight : 1,
         }}
         shadows
-        onPointerUp={handleSwipe}
       >
         <spotLight
           position={[0, 20, 10]}
@@ -254,7 +204,7 @@ const ThreeScene = ({ isClient }) => {
             {gameState === "selection" ? (
               <BallSelection position={modelPosition} />
             ) : (
-              <Model position={modelPosition} onCollide={handleCollision} />
+              <Model position={modelPosition} />
             )}
             <Ground position={groundPosition} />
             <LeftBumper />

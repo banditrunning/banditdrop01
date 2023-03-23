@@ -20,11 +20,14 @@ function Model({
   const { nodes, materials } = useGLTF("../models/Football.glb");
   const [playKickSound] = useSound(kick);
 
-  const [ref, api] = useSphere(() => ({
+  const [ref, api] = useSphere((index) => ({
     mass: gameState === "selection" ? 0 : 1,
     position: position,
     args: [size.length() / 2],
     material: { restitution: 1.2 },
+    onCollide: (e) => {
+      onCollide && onCollide(e, ref);
+    },
     ...props,
   }));
 
@@ -61,31 +64,33 @@ function Model({
   }, [position]);
 
   useEffect(() => {
-    if (ref.current && onCollide) {
-      ref.current.addEventListener("collide", (e) =>
-        onCollide(e, ref.current.children[0])
-      );
-    }
+    if (ref.current && onCollide && gameState === "gameplay") {
+      const handleCollide = (e) => {
+        onCollide(e, ref.current.children[0]);
+      };
+      ref.current.addEventListener("collide", handleCollide);
 
-    return () => {
-      if (ref.current && onCollide) {
-        ref.current.removeEventListener("collide", (e) =>
-          onCollide(e, ref.current.children[0])
-        );
-      }
-    };
+      return () => {
+        ref.current.removeEventListener("collide", handleCollide);
+      };
+    }
   }, [ref, onCollide]);
 
   const bind = useGesture({
     onPointerUp: () => {
-      const upwardForce = [0, 100, 0];
+      const upwardForce = [0, 115, 0];
       const spinTorque = [0, inAir ? -10 : 0, 0]; // apply a torque around the y-axis if in air
       const worldPoint = [0, 0, 0];
-      api.applyForce(upwardForce, worldPoint);
-      api.applyTorque(spinTorque); // apply the torque
-      playKickSound(); // play the kick sound effect
+      if (api) {
+        // check if api is defined
+        api.applyForce(upwardForce, worldPoint);
+        api.applyTorque(spinTorque); // apply the torque
+        playKickSound(); // play the kick sound effect
+      }
       // Increment the tap count and store it locally
-      setTapCount(tapCount + 1);
+      {
+        gameState === "gameplay" && setTapCount(tapCount + 1);
+      }
     },
   });
 
