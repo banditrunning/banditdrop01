@@ -110,7 +110,7 @@ const RightBumper = (props) => {
   return (
     <mesh ref={ref} receiveShadow>
       <planeBufferGeometry attach="geometry" args={[100, 100]} />
-      <shadowMaterial attach="material" transparent opacity={0.5} />
+      <meshPhongMaterial attach="material" color={"#4a4a4a"} shininess={30} />
     </mesh>
   );
 };
@@ -158,7 +158,7 @@ const ThreeScene = ({ isClient }) => {
     Math.tan(((90 - fov / 2) * Math.PI) / 180) * cameraPosition[2];
 
   const groundY = distanceToBottom * aspect;
-  const offsetY = 1.6;
+  const offsetY = 2.4;
   const groundPosition = [0, -groundY + offsetY, 0];
 
   const [constantRotation, setConstantRotation] = useState(

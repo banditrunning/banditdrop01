@@ -45,7 +45,39 @@ const Ground = (props) => {
   return (
     <mesh ref={ref} receiveShadow>
       <planeBufferGeometry attach="geometry" args={[100, 100]} />
-      <shadowMaterial attach="material" transparent opacity={0.5} />
+      <meshPhongMaterial attach="material" color={"#4a4a4a"} shininess={30} />
+    </mesh>
+  );
+};
+
+const Bumper = (props) => {
+  const [positionY, setPositionY] = useState(-2.75);
+
+  useEffect(() => {
+    const setGroundPosition = () => {
+      const aspectRatio = window.innerWidth / window.innerHeight;
+      setPositionY(-aspectRatio * 3);
+    };
+
+    setGroundPosition();
+    window.addEventListener("resize", setGroundPosition);
+
+    return () => {
+      window.removeEventListener("resize", setGroundPosition);
+    };
+  }, []);
+
+  const [ref] = usePlane(() => ({
+    rotation: [-Math.PI / 2, 0, 0],
+    position: [0, positionY, 0],
+    material: { restitution: 0.4 },
+    ...props,
+  }));
+
+  return (
+    <mesh ref={ref} receiveShadow>
+      <planeBufferGeometry attach="geometry" args={[100, 100]} />
+      <shadowMaterial attach="material" color={"#ffffff"} opacity={0.5} />
     </mesh>
   );
 };
@@ -102,7 +134,7 @@ const ThreeScene = ({
     Math.tan(((90 - fov / 2) * Math.PI) / 180) * cameraPosition[2];
 
   const groundY = distanceToBottom * aspect;
-  const offsetY = 1.6;
+  const offsetY = 2.4;
   const groundPosition = [0, -groundY + offsetY, 0];
 
   const [constantRotation, setConstantRotation] = useState(
@@ -177,7 +209,7 @@ const ThreeScene = ({
         <ambientLight intensity={0.1} />
         <directionalLight intensity={0.1} />
         <Suspense fallback={null}>
-          <Physics gravity={[0, -10, 0]}>
+          <Physics gravity={[0, -10, 0]} step={1 / 60}>
             {selectedBallIndex === 0 ? (
               <Model
                 position={modelPosition}

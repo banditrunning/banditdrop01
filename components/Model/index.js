@@ -23,7 +23,7 @@ function Model({
   const [ref, api] = useSphere((index) => ({
     mass: gameState === "selection" ? 0 : 1,
     position: position,
-    args: [size.length() / 2],
+    args: [scaledBallRadius],
     material: { restitution: 1.2 },
     onCollide: (e) => {
       onCollide && onCollide(e, ref);
@@ -54,6 +54,8 @@ function Model({
   // Calculate the size of the bounding box
   const size = new Vector3();
   box.getSize(size);
+  const ballRadius = size.length() / (2 * Math.sqrt(3));
+  const scaledBallRadius = ballRadius * 0.3;
 
   // Calculate the center of the bounding box
   const center = new Vector3();
@@ -86,7 +88,7 @@ function Model({
       if (api) {
         // check if api is defined
         api.applyForce(upwardForce, worldPoint);
-        api.applyForce(sideForce, worldPoint);
+
         api.applyTorque(spinTorque); // apply the torque
         playKickSound(); // play the kick sound effect
       }
