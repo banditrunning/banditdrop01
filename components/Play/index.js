@@ -99,7 +99,7 @@ const ThreeScene = ({
     }
   }, [gameState]);
 
-  const cameraPosition = [0, 0, 2.3];
+  const cameraPosition = [0, 0, 1.8];
   const fov = 48;
   const aspect = isClient ? window.innerWidth / window.innerHeight : 1;
 
@@ -107,7 +107,7 @@ const ThreeScene = ({
     Math.tan(((90 - fov / 2) * Math.PI) / 180) * cameraPosition[2];
 
   const groundY = distanceToBottom * aspect;
-  const offsetY = 2.3;
+  const offsetY = 2;
   const groundPosition = [0, -groundY + offsetY, 0];
 
   const [constantRotation, setConstantRotation] = useState(
