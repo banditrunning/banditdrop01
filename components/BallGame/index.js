@@ -37,7 +37,7 @@ const Ground = (props) => {
   const [ref] = usePlane(() => ({
     rotation: [-Math.PI / 2, 0, 0],
     position: [0, positionY, 0],
-    material: { restitution: 0.2 },
+    material: { restitution: 0.4 },
     ...props,
   }));
 
@@ -56,7 +56,7 @@ const LeftBumper = (props) => {
   const [ref] = usePlane(() => ({
     rotation: [-Math.PI / 2, 0, -Math.PI / 2],
     position: [-aspect * 3, positionY, 0],
-    material: { restitution: 0.4 },
+    material: { restitution: 1 },
     ...props,
   }));
 
