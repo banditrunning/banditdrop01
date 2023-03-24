@@ -17,7 +17,7 @@ const Leaderboard = () => {
   useEffect(() => {
     const fetchScores = async () => {
       const { data: scores, error } = await supabase
-        .from<Score>("scores")
+        .from("scores")
         .select("name, tapCount")
         .order("tapCount", { ascending: false })
         .limit(10);
