@@ -85,7 +85,7 @@ const ThreeScene = ({
   setGameOver,
 }) => {
   const { gameState, selectedBallIndex } = useContext(GameContext);
-  const [modelPosition, setModelPosition] = useState([0, 3, 0]);
+  const [modelPosition, setModelPosition] = useState([0, 3.5, 0]);
   const [hasStarted, setHasStarted] = useState(false);
   const [collisionCount, setCollisionCount] = useState(0);
   const [hasCollidedAfterFirstTap, setHasCollidedAfterFirstTap] =
@@ -107,7 +107,7 @@ const ThreeScene = ({
     Math.tan(((90 - fov / 2) * Math.PI) / 180) * cameraPosition[2];
 
   const groundY = distanceToBottom * aspect;
-  const offsetY = 3;
+  const offsetY = 2.6;
   const groundPosition = [0, -groundY + offsetY, 0];
 
   const [constantRotation, setConstantRotation] = useState(

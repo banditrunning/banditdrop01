@@ -34,19 +34,12 @@ function Model({
 
   const [inAir, setInAir] = useState(false);
 
-  useFrame(({ scene, delta }) => {
-    if (ref.current) {
-      // Update the mesh rotation to match the physics body rotation
-      if (gameState === "selection") {
-        // Rotate the mesh on the y-axis
-        ref.current.rotation.y += delta * Math.PI * 2 * 0.5;
-      }
-      // Check if the ball is in the air
-      if (ref.current.position.y > 0) {
-        setInAir(true);
-      } else {
-        setInAir(false);
-      }
+  useFrame(({ delta }) => {
+    // Check if the ball is in the air
+    if (ref.current.position.y > 0) {
+      setInAir(true);
+    } else {
+      setInAir(false);
     }
   });
 
@@ -82,29 +75,31 @@ function Model({
     }
   }, [ref, onCollide]);
 
+  const COOLDOWN_TIME = 200; // cooldown period in milliseconds
+
   const bind = useGesture({
     onPointerUp: () => {
-      const upwardForce = [0, 100, 0];
-      const worldPoint = [0, 0, 0];
+      const currentTime = Date.now();
+      if (currentTime - lastPointerUpTime >= COOLDOWN_TIME) {
+        const upwardForce = [0, 120, 0];
+        const worldPoint = [0, 0, 0];
 
-      if (api) {
-        // check if api is defined
-        api.applyForce(upwardForce, worldPoint);
-        playKickSound(); // play the kick sound effect
-      }
+        if (api) {
+          // check if api is defined
+          api.applyForce(upwardForce, worldPoint);
+          playKickSound(); // play the kick sound effect
+        }
 
-      // Increment the tap count and store it locally
-      {
-        gameState === "gameplay" && setTapCount(tapCount + 1);
-      }
-
-      {
-        inAir === false;
-        angularVelocity === [0, 0, 0];
+        // Increment the tap count and store it locally
+        {
+          gameState === "gameplay" && setTapCount(tapCount + 1);
+        }
+        setLastPointerUpTime(currentTime);
       }
     },
   });
 
+  const [lastPointerUpTime, setLastPointerUpTime] = useState(0);
   const [angularVelocity, setAngularVelocity] = useState([0, 0, 0]);
 
   useEffect(() => {
@@ -131,8 +126,13 @@ function Model({
 
       // Apply the damping torque
       api.applyTorque(dampingTorque);
+
+      // If the ball is on the ground, set the angular velocity to zero
+      if (ref.current.position.y < scaledBallRadius) {
+        api.angularVelocity.set(0, 0, 0);
+      }
     }
-  }, [api, angularVelocity]);
+  }, [api, angularVelocity, inAir, ref, scaledBallRadius]);
 
   return (
     <group
