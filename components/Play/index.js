@@ -171,6 +171,8 @@ const ThreeScene = ({
           aspect: isClient ? window.innerWidth / window.innerHeight : 1,
         }}
         shadows
+        frameloop="demand"
+        limit={60}
       >
         <spotLight
           position={[0, 20, 10]}
