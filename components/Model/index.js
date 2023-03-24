@@ -78,7 +78,7 @@ function Model({
   const bind = useGesture({
     onPointerUp: () => {
       console.log("onPointerUp called");
-      const upwardForce = [0, 150, 0];
+      const upwardForce = [0, 100, 0];
       const worldPoint = [0, 0, 0];
 
       if (api) {
@@ -93,40 +93,6 @@ function Model({
       }
     },
   });
-
-  const [angularVelocity, setAngularVelocity] = useState([0, 0, 0]);
-
-  useEffect(() => {
-    if (api) {
-      // Set up the loop that applies the damping torque
-      const intervalId = setInterval(() => {
-        api.velocity.subscribe((velocity) => {
-          setAngularVelocity(velocity);
-        });
-      }, 1000 / 60); // Run the loop at 60 FPS
-
-      // Clean up the interval when the component unmounts
-      return () => clearInterval(intervalId);
-    }
-  }, [api]);
-
-  // Apply damping torque using useEffect
-  useEffect(() => {
-    if (api && inAir) {
-      const dampingFactor = -0.05; // adjust this value to control the amount of damping torque
-
-      // Calculate the damping torque
-      const dampingTorque = angularVelocity.map((v) => v * dampingFactor);
-
-      // Apply the damping torque
-      api.applyTorque(dampingTorque);
-
-      // If the ball is on the ground, set the angular velocity to zero
-      if (ref.current.position.y < scaledBallRadius) {
-        api.angularVelocity.set(0, 0, 0);
-      }
-    }
-  }, [api, angularVelocity, inAir, ref, scaledBallRadius]);
 
   return (
     <group

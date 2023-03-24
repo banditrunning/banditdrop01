@@ -47,7 +47,7 @@ const Ground = (props) => {
       <planeBufferGeometry attach="geometry" args={[100, 100]} />
       <meshPhongMaterial
         attach="material"
-        color={"#393939"}
+        color={"#000000"}
         metalness={1}
         roughness={1}
       />
@@ -107,7 +107,7 @@ const ThreeScene = ({
     Math.tan(((90 - fov / 2) * Math.PI) / 180) * cameraPosition[2];
 
   const groundY = distanceToBottom * aspect;
-  const offsetY = 3;
+  const offsetY = 2.7;
   const groundPosition = [0, -groundY + offsetY, 0];
 
   const [constantRotation, setConstantRotation] = useState(
@@ -182,7 +182,7 @@ const ThreeScene = ({
         <ambientLight intensity={0.1} />
         <directionalLight intensity={0.1} />
         <Suspense fallback={null}>
-          <Physics gravity={[0, -10, 0]} step={1 / 60}>
+          <Physics gravity={[0, -8, 0]} step={1 / 60}>
             {selectedBallIndex === 0 ? (
               <Model
                 position={modelPosition}

@@ -44,7 +44,12 @@ const Ground = (props) => {
   return (
     <mesh ref={ref} receiveShadow>
       <planeBufferGeometry attach="geometry" args={[100, 100]} />
-      <shadowMaterial attach="material" transparent opacity={0.5} />
+      <meshPhongMaterial
+        attach="material"
+        color={"#000000"}
+        metalness={1}
+        roughness={1}
+      />
     </mesh>
   );
 };
