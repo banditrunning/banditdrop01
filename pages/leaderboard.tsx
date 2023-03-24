@@ -11,7 +11,7 @@ type Score = {
   tapCount: number;
 };
 
-const leaderboard = () => {
+const Leaderboard = () => {
   const [scores, setScores] = useState<Score[]>([]);
 
   useEffect(() => {
@@ -67,4 +67,4 @@ const leaderboard = () => {
   );
 };
 
-export default leaderboard;
+export default Leaderboard;
