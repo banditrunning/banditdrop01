@@ -99,7 +99,7 @@ const ThreeScene = ({
     }
   }, [gameState]);
 
-  const cameraPosition = [0, 0, 1.8];
+  const cameraPosition = [0, 0, 2.3];
   const fov = 48;
   const aspect = isClient ? window.innerWidth / window.innerHeight : 1;
 

@@ -79,7 +79,7 @@ function Model({
   const bind = useGesture({
     onPointerUp: () => {
       console.log("onPointerUp called");
-      const upwardForce = [0, 100, 0];
+      //const upwardForce = [0, 100, 0];//
       const worldPoint = [
         refCurrent.position.x,
         refCurrent.position.y,
@@ -88,7 +88,8 @@ function Model({
 
       if (api) {
         // check if api is defined
-        api.applyForce(upwardForce, worldPoint);
+        //api.applyForce(upwardForce, worldPoint);//
+        api.velocity.set(0, 4, 0);
         playKickSound(); // play the kick sound effect
       }
 
