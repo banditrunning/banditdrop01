@@ -38,7 +38,7 @@ const Ground = (props) => {
   const [ref] = usePlane(() => ({
     rotation: [-Math.PI / 2, 0, 0],
     position: [0, positionY, 0],
-    material: { restitution: 0.4 },
+    material: { restitution: 0.6 },
     ...props,
   }));
 
@@ -47,7 +47,7 @@ const Ground = (props) => {
       <planeBufferGeometry attach="geometry" args={[100, 100]} />
       <meshPhongMaterial
         attach="material"
-        color={"#ffffff"}
+        color={"#333333"}
         metalness={1}
         roughness={1}
       />
@@ -85,7 +85,7 @@ const ThreeScene = ({
   setGameOver,
 }) => {
   const { gameState, selectedBallIndex } = useContext(GameContext);
-  const [modelPosition, setModelPosition] = useState([0, 3.5, 0]);
+  const [modelPosition, setModelPosition] = useState([0, 0, 0]);
   const [hasStarted, setHasStarted] = useState(false);
   const [collisionCount, setCollisionCount] = useState(0);
   const [hasCollidedAfterFirstTap, setHasCollidedAfterFirstTap] =
@@ -95,12 +95,12 @@ const ThreeScene = ({
     if (gameState === "selection") {
       setModelPosition([0, 3, 0]);
     } else {
-      setModelPosition([0, 3, 0]);
+      setModelPosition([0, 0, 0]);
     }
   }, [gameState]);
 
   const cameraPosition = [0, 0, 1.8];
-  const fov = 52;
+  const fov = 48;
   const aspect = isClient ? window.innerWidth / window.innerHeight : 1;
 
   const distanceToBottom =

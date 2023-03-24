@@ -22,7 +22,7 @@ function Model({
   const [playKickSound] = useSound(kick);
 
   const [ref, api] = useSphere((index) => ({
-    mass: gameState === "selection" ? 0 : 1,
+    mass: gameState === "selection" ? 0 : 0.9,
     position: position,
     args: [scaledBallRadius],
     material: { restitution: 1.2 },
@@ -75,11 +75,16 @@ function Model({
     }
   }, [ref, onCollide]);
 
+  const refCurrent = ref.current;
   const bind = useGesture({
     onPointerUp: () => {
       console.log("onPointerUp called");
       const upwardForce = [0, 100, 0];
-      const worldPoint = [0, 0, 0];
+      const worldPoint = [
+        refCurrent.position.x,
+        refCurrent.position.y,
+        refCurrent.position.z,
+      ];
 
       if (api) {
         // check if api is defined
@@ -133,7 +138,7 @@ function Model({
       ref={ref}
       dispose={null}
       position={[-center.x, -center.y, -center.z]}
-      scale={[0.3, 0.3, 0.3]}
+      scale={[0.25, 0.25, 0.25]}
       {...bind()}
     >
       <group position={[0, 0, -0.01]} rotation={[-Math.PI, 0, -Math.PI]}>
