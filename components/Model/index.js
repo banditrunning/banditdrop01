@@ -79,7 +79,11 @@ function Model({
     onPointerUp: () => {
       console.log("onPointerUp called");
       const upwardForce = [0, 100, 0];
-      const worldPoint = [0, 0, 0];
+      const worldPoint = [
+        ref.current.position.x,
+        ref.current.position.y,
+        ref.current.position.z,
+      ];
 
       if (api) {
         // check if api is defined
