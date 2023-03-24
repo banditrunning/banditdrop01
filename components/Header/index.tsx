@@ -16,7 +16,7 @@ export default function Header(props: { showContent: boolean }) {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 bg-black z-[101]">
+    <div className="fixed top-0 left-0 right-0 z-[101]">
       <div
         className={`flex flex-row w-full items-center justify-between border-b border-solid border-white pt-6 pb-4 px-4 ${
           showContent
@@ -28,7 +28,7 @@ export default function Header(props: { showContent: boolean }) {
           <Symbol />
         ) : (
           <div onClick={handleClick}>
-            <RightArrow size={24}/>
+            <RightArrow size={24} />
           </div>
         )}
       </div>

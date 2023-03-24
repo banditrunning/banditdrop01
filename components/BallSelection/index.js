@@ -1,11 +1,11 @@
 import React, { useState, useMemo, useContext, memo } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Physics } from "@react-three/cannon";
 import RightArrow from "../RightArrow";
 import LeftArrow from "../LeftArrow";
 import GameContext from "@/context";
 
-const BallSelection = ({ balls }) => {
+const BallSelection = ({ balls, rotation }) => {
   const { selectedBallIndex, setSelectedBallIndex, setGameState } =
     useContext(GameContext);
 
@@ -58,7 +58,11 @@ const BallSelection = ({ balls }) => {
         />
         <ambientLight intensity={0.5} />
         <Physics>
-          <BallComponent position={[0, 0, 0]} selected={true} />
+          <BallComponent
+            position={[0, 0, 0]}
+            selected={true}
+            rotation={rotation}
+          />
         </Physics>
       </Canvas>
       <div
@@ -123,6 +127,32 @@ const BallSelection = ({ balls }) => {
       >
         Play <LeftArrow />
       </button>
+
+      <div
+        style={{
+          position: "fixed",
+          bottom: "150px",
+          left: "0",
+          right: "0",
+          marginLeft: "auto",
+          marginRight: "auto",
+          zIndex: "101",
+          fontSize: "24px",
+          fontFamily: "grotesk-medium",
+          textTransform: "uppercase",
+          color: "black",
+          padding: "0px",
+          borderRadius: "5px",
+          backgroundColor: "white",
+          width: "130px",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {selectedBallIndex === 1 ? "MIDNIGHT" : "DAYLIGHT"}
+      </div>
     </div>
   );
 };

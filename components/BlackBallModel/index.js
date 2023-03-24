@@ -7,6 +7,7 @@ import GameContext from "@/context";
 import { useGesture } from "react-use-gesture";
 import { useSound } from "use-sound";
 import kick from "public/sounds/kick.mp4";
+import * as THREE from "three";
 
 function Model({
   position,
@@ -20,20 +21,26 @@ function Model({
   const { nodes, materials } = useGLTF("../models/Football.glb");
   const [playKickSound] = useSound(kick);
 
-  const [ref, api] = useSphere(() => ({
+  const [ref, api] = useSphere((index) => ({
     mass: gameState === "selection" ? 0 : 1,
     position: position,
-    args: [size.length() / 2],
+    args: [scaledBallRadius],
     material: { restitution: 1.2 },
+    onCollide: (e) => {
+      onCollide && onCollide(e, ref);
+    },
     ...props,
   }));
 
   const [inAir, setInAir] = useState(false);
 
-  useFrame(({ scene }) => {
+  useFrame(({ scene, delta }) => {
     if (ref.current) {
       // Update the mesh rotation to match the physics body rotation
-
+      if (gameState === "selection") {
+        // Rotate the mesh on the y-axis
+        ref.current.rotation.y += delta * Math.PI * 2 * 0.5;
+      }
       // Check if the ball is in the air
       if (ref.current.position.y > 0) {
         setInAir(true);
@@ -51,6 +58,8 @@ function Model({
   // Calculate the size of the bounding box
   const size = new Vector3();
   box.getSize(size);
+  const ballRadius = size.length() / (2 * Math.sqrt(3));
+  const scaledBallRadius = ballRadius * 0.3;
 
   // Calculate the center of the bounding box
   const center = new Vector3();
@@ -61,33 +70,69 @@ function Model({
   }, [position]);
 
   useEffect(() => {
-    if (ref.current && onCollide) {
-      ref.current.addEventListener("collide", (e) =>
-        onCollide(e, ref.current.children[0])
-      );
-    }
+    if (ref.current && onCollide && gameState === "gameplay") {
+      const handleCollide = (e) => {
+        onCollide(e, ref.current.children[0]);
+      };
+      ref.current.addEventListener("collide", handleCollide);
 
-    return () => {
-      if (ref.current && onCollide) {
-        ref.current.removeEventListener("collide", (e) =>
-          onCollide(e, ref.current.children[0])
-        );
-      }
-    };
+      return () => {
+        ref.current.removeEventListener("collide", handleCollide);
+      };
+    }
   }, [ref, onCollide]);
 
   const bind = useGesture({
     onPointerUp: () => {
       const upwardForce = [0, 100, 0];
-      const spinTorque = [0, inAir ? -10 : 0, 0]; // apply a torque around the y-axis if in air
       const worldPoint = [0, 0, 0];
-      api.applyForce(upwardForce, worldPoint);
-      api.applyTorque(spinTorque); // apply the torque
-      playKickSound(); // play the kick sound effect
+
+      if (api) {
+        // check if api is defined
+        api.applyForce(upwardForce, worldPoint);
+        playKickSound(); // play the kick sound effect
+      }
+
       // Increment the tap count and store it locally
-      setTapCount(tapCount + 1);
+      {
+        gameState === "gameplay" && setTapCount(tapCount + 1);
+      }
+
+      {
+        inAir === false;
+        angularVelocity === [0, 0, 0];
+      }
     },
   });
+
+  const [angularVelocity, setAngularVelocity] = useState([0, 0, 0]);
+
+  useEffect(() => {
+    if (api) {
+      // Set up the loop that applies the damping torque
+      const intervalId = setInterval(() => {
+        api.velocity.subscribe((velocity) => {
+          setAngularVelocity(velocity);
+        });
+      }, 1000 / 60); // Run the loop at 60 FPS
+
+      // Clean up the interval when the component unmounts
+      return () => clearInterval(intervalId);
+    }
+  }, [api]);
+
+  // Apply damping torque using useEffect
+  useEffect(() => {
+    if (api && inAir) {
+      const dampingFactor = -0.05; // adjust this value to control the amount of damping torque
+
+      // Calculate the damping torque
+      const dampingTorque = angularVelocity.map((v) => v * dampingFactor);
+
+      // Apply the damping torque
+      api.applyTorque(dampingTorque);
+    }
+  }, [api, angularVelocity]);
 
   return (
     <group

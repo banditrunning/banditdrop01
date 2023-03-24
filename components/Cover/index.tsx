@@ -28,11 +28,13 @@ const Cover: React.FC = () => {
       clickable?: boolean;
       tapCount?: number;
       setTapCount?: React.Dispatch<React.SetStateAction<number>>;
+      rotation: [number, number, number];
     }>;
     position: [number, number, number];
     clickable?: boolean;
     tapCount?: number;
     setTapCount?: React.Dispatch<React.SetStateAction<number>>;
+    rotation?: [number, number, number];
   }
 
   const balls: Ball[] = [
@@ -43,6 +45,7 @@ const Cover: React.FC = () => {
         clickable,
         tapCount,
         setTapCount,
+        rotation,
       }) => (
         <Model
           position={position}
@@ -50,10 +53,12 @@ const Cover: React.FC = () => {
           clickable={clickable}
           tapCount={tapCount}
           setTapCount={setTapCount}
+          rotation={rotation}
         />
       ),
       position: [0, 0, 0],
       clickable: true,
+      rotation: [0, 0, 0],
     },
     {
       component: ({
@@ -62,6 +67,7 @@ const Cover: React.FC = () => {
         clickable,
         tapCount,
         setTapCount,
+        rotation,
       }) => (
         <BlackBallModel
           position={position}
@@ -69,10 +75,12 @@ const Cover: React.FC = () => {
           clickable={clickable}
           tapCount={tapCount}
           setTapCount={setTapCount}
+          rotation={rotation}
         />
       ),
       position: [0, 0, 0],
       clickable: true,
+      rotation: [0, 0, 0],
     },
   ];
 
@@ -111,6 +119,10 @@ const Cover: React.FC = () => {
           <div>How&apos;s</div>
           <div>Your</div>
           <div>Juggle?</div>
+          <div className=" py-3 font-GroteskRegular text-white uppercase text-lg leading-[1.2rem] text-[#767676]">
+            <div>Beat the High Score.</div>
+            <div>Unlock early drop access.</div>
+          </div>
         </div>
         <div
           className={`w-full fixed bottom-[-100%] left-0 right-0 z-[101] ${
@@ -192,7 +204,7 @@ const Cover: React.FC = () => {
     return (
       <>
         <Header text="Pick Your Poison" />
-        <BallSelection balls={balls} />
+        <BallSelection balls={balls} rotation={[0, Math.PI / 2, 0]} />
       </>
     );
   };
@@ -229,24 +241,7 @@ const Cover: React.FC = () => {
     return (
       <>
         <div className="font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden w-full"></div>
-        <div
-          className={`w-full fixed bottom-[-100%] left-0 right-0 ${
-            showMarquee ? "marquee-show-animation duration-1000 ease-out" : ""
-          }`}
-        >
-          <Marquee
-            className="bg-[#2c2c2c] text-white font-GroteskRegular uppercase py-3"
-            gradient={false}
-            speed={30}
-            delay={3}
-          >
-            {Array(19)
-              .fill(19, 0, 19)
-              .map((_, index) => (
-                <MarqueeMessage key={index} />
-              ))}
-          </Marquee>
-        </div>
+
         <style jsx>{`
           .marquee-show-animation {
             animation: slide-up 1s ease-out forwards;
@@ -265,6 +260,7 @@ const Cover: React.FC = () => {
           ball={selectedBall.component({
             position: [0, 0, 0],
             onCollide: () => {},
+            rotation: [0, 0, 0],
           })}
         />
       </>

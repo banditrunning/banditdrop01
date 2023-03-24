@@ -45,39 +45,12 @@ const Ground = (props) => {
   return (
     <mesh ref={ref} receiveShadow>
       <planeBufferGeometry attach="geometry" args={[100, 100]} />
-      <meshPhongMaterial attach="material" color={"#4a4a4a"} shininess={30} />
-    </mesh>
-  );
-};
-
-const Bumper = (props) => {
-  const [positionY, setPositionY] = useState(-2.75);
-
-  useEffect(() => {
-    const setGroundPosition = () => {
-      const aspectRatio = window.innerWidth / window.innerHeight;
-      setPositionY(-aspectRatio * 3);
-    };
-
-    setGroundPosition();
-    window.addEventListener("resize", setGroundPosition);
-
-    return () => {
-      window.removeEventListener("resize", setGroundPosition);
-    };
-  }, []);
-
-  const [ref] = usePlane(() => ({
-    rotation: [-Math.PI / 2, 0, 0],
-    position: [0, positionY, 0],
-    material: { restitution: 0.4 },
-    ...props,
-  }));
-
-  return (
-    <mesh ref={ref} receiveShadow>
-      <planeBufferGeometry attach="geometry" args={[100, 100]} />
-      <shadowMaterial attach="material" color={"#ffffff"} opacity={0.5} />
+      <meshPhongMaterial
+        attach="material"
+        color={"#393939"}
+        metalness={1}
+        roughness={1}
+      />
     </mesh>
   );
 };
@@ -201,7 +174,7 @@ const ThreeScene = ({
       >
         <spotLight
           position={[0, 20, 10]}
-          intensity={gameState === "selection" ? 0.5 : 1}
+          intensity={1}
           angle={Math.PI / 6}
           penumbra={1}
           castShadow
@@ -258,7 +231,11 @@ const Play = ({ ball }) => {
         tapCount={tapCount}
         setGameOver={setGameOver}
       />
-      <div className="w-full top-[74px] left-0 right-0 fixed">
+      <div
+        className={`w-full top-[74px] left-0 right-0 fixed ${
+          gameOver === true ? "z-[1000]" : ""
+        }`}
+      >
         <CounterBoard tapCount={tapCount} gameOver={gameOver} />
       </div>
     </>

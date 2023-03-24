@@ -110,7 +110,7 @@ const RightBumper = (props) => {
   return (
     <mesh ref={ref} receiveShadow>
       <planeBufferGeometry attach="geometry" args={[100, 100]} />
-      <meshPhongMaterial attach="material" color={"#4a4a4a"} shininess={30} />
+      <meshPhongMaterial attach="material" color={"#393939"} />
     </mesh>
   );
 };

@@ -34,16 +34,12 @@ function Model({
 
   const [inAir, setInAir] = useState(false);
 
-  useFrame(({ scene }) => {
-    if (ref.current) {
-      // Update the mesh rotation to match the physics body rotation
-
-      // Check if the ball is in the air
-      if (ref.current.position.y > 0) {
-        setInAir(true);
-      } else {
-        setInAir(false);
-      }
+  useFrame(({ delta }) => {
+    // Check if the ball is in the air
+    if (ref.current.position.y > 0) {
+      setInAir(true);
+    } else {
+      setInAir(false);
     }
   });
 
@@ -81,7 +77,7 @@ function Model({
 
   const bind = useGesture({
     onPointerUp: () => {
-      const upwardForce = [0, 150, 0];
+      const upwardForce = [0, 100, 0];
       const worldPoint = [0, 0, 0];
 
       if (api) {
@@ -93,11 +89,6 @@ function Model({
       // Increment the tap count and store it locally
       {
         gameState === "gameplay" && setTapCount(tapCount + 1);
-      }
-
-      {
-        inAir === false;
-        angularVelocity === [0, 0, 0];
       }
     },
   });
@@ -128,8 +119,13 @@ function Model({
 
       // Apply the damping torque
       api.applyTorque(dampingTorque);
+
+      // If the ball is on the ground, set the angular velocity to zero
+      if (ref.current.position.y < scaledBallRadius) {
+        api.angularVelocity.set(0, 0, 0);
+      }
     }
-  }, [api, angularVelocity]);
+  }, [api, angularVelocity, inAir, ref, scaledBallRadius]);
 
   return (
     <group
