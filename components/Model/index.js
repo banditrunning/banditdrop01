@@ -76,29 +76,32 @@ function Model({
   }, [ref, onCollide]);
 
   const refCurrent = ref.current;
-  const bind = useGesture({
-    onPointerUp: () => {
-      console.log("onPointerUp called");
+  const bind = useGesture(
+    {
+      onPointerUp: () => {
+        console.log("onPointerUp called");
 
-      const worldPoint = [
-        refCurrent.position.x,
-        refCurrent.position.y,
-        refCurrent.position.z,
-      ];
+        const worldPoint = [
+          refCurrent.position.x,
+          refCurrent.position.y,
+          refCurrent.position.z,
+        ];
 
-      if (api) {
-        // check if api is defined
+        if (api) {
+          // check if api is defined
 
-        api.velocity.set(0, 4, 0);
-        playKickSound(); // play the kick sound effect
-      }
+          api.velocity.set(0, 4, 0);
+          playKickSound(); // play the kick sound effect
+        }
 
-      // Increment the tap count and store it locally
-      {
-        gameState === "gameplay" && setTapCount(tapCount + 1);
-      }
+        // Increment the tap count and store it locally
+        {
+          gameState === "gameplay" && setTapCount(tapCount + 1);
+        }
+      },
     },
-  });
+    1000 / 60
+  );
 
   const [angularVelocity, setAngularVelocity] = useState([0, 0, 0]);
 
