@@ -83,6 +83,7 @@ const ThreeScene = ({
   setTapCount,
   gameOver,
   setGameOver,
+  camera,
 }) => {
   const { gameState, selectedBallIndex } = useContext(GameContext);
   const [modelPosition, setModelPosition] = useState([0, 3.5, 0]);
@@ -190,6 +191,7 @@ const ThreeScene = ({
                 clickable
                 setTapCount={gameState === "gameplay" && setTapCount}
                 tapCount={gameState === "gameplay" && tapCount}
+                camera={camera}
               />
             ) : (
               <BlackBallModel
@@ -198,6 +200,7 @@ const ThreeScene = ({
                 clickable
                 setTapCount={setTapCount}
                 tapCount={tapCount}
+                camera={camera}
               />
             )}
             <Ground position={groundPosition} />
@@ -210,7 +213,7 @@ const ThreeScene = ({
   );
 };
 
-const Play = ({ ball }) => {
+const Play = ({ ball, camera }) => {
   const [isClient, setIsClient] = useState(false);
   const [tapCount, setTapCount] = useState(0);
   const [gameOver, setGameOver] = useState(false);
@@ -230,6 +233,7 @@ const Play = ({ ball }) => {
         setTapCount={setTapCount}
         tapCount={tapCount}
         setGameOver={setGameOver}
+        camera={camera}
       />
       <div
         className={`w-full top-[74px] left-0 right-0 fixed ${
