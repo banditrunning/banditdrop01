@@ -85,7 +85,7 @@ const ThreeScene = ({
   setGameOver,
 }) => {
   const { gameState, selectedBallIndex } = useContext(GameContext);
-  const [modelPosition, setModelPosition] = useState([0, 0, 0]);
+  const [modelPosition, setModelPosition] = useState([0, -0.068, 0]);
   const [hasStarted, setHasStarted] = useState(false);
   const [collisionCount, setCollisionCount] = useState(0);
   const [hasCollidedAfterFirstTap, setHasCollidedAfterFirstTap] =
@@ -95,7 +95,7 @@ const ThreeScene = ({
     if (gameState === "selection") {
       setModelPosition([0, 3, 0]);
     } else {
-      setModelPosition([0, 0, 0]);
+      setModelPosition([0, -0.068, 0]);
     }
   }, [gameState]);
 
@@ -128,11 +128,11 @@ const ThreeScene = ({
       }
 
       setCollisionCount((count) => {
-        const updatedCount = count + 1;
+        const updatedCount = count;
         console.log("Collision count:", updatedCount);
         console.log(tapCountRef.current);
 
-        if (tapCountRef.current >= 1 && count > 7) {
+        if (tapCountRef.current >= 1 && count === 0) {
           console.log("Game over!");
           setGameOver(true);
         }
