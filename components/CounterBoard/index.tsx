@@ -35,18 +35,32 @@ type CounterProps = {
 
 const YouBoard = ({ tapCount, title, gameOver, score }: YouProps) => {
   const [name, setName] = useState("");
+  const [error, setError] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false); // added state for submitted
 
   const handleSaveScore = async () => {
     console.log("handleSaveScore called");
+    setSubmitting(true);
     const { data, error } = await supabase
       .from("scores")
       .insert([{ name: name, tapCount: tapCount }]);
+    setSubmitting(false);
     if (error) {
       console.error(error);
     } else {
       console.log(data);
+      setSubmitted(true);
     }
   };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+    setError(e.target.value.trim() === "");
+  };
+
+  const isNameEmpty = name.trim() === "";
+
   return (
     <>
       {gameOver === true ? (
@@ -64,21 +78,38 @@ const YouBoard = ({ tapCount, title, gameOver, score }: YouProps) => {
               <div className="w-full flex flex-col justify-center items-center px-2 m-auto">
                 <input
                   type="text"
-                  placeholder="YOUR NAME"
+                  placeholder="YOUR NAME*"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={handleNameChange}
                   onFocus={handleFocus}
                   onBlur={handleBlur}
-                  className="text-3xl text-black placeholder-black font-GroteskRegular bg-[#C9C3AD] rounded-[5px] px-2 py-2 mb-2 w-full uppercase"
+                  className={`text-3xl placeholder-black bg-[#C9C3AD] rounded-[5px] px-2 py-2 mb-2 w-full uppercase ${
+                    error ? "text-red-600" : "text-black"
+                  }`}
                 />
               </div>
             </div>
-            <button
-              onClick={handleSaveScore}
-              className="border border-white border-solid text-white font-GroteskRegular py-2 text-xl px-4 w-full rounded-[5px] my-2 flex flex-row justify-center items-center"
-            >
-              <span className="mr-1">SHOP THE DROP</span> <LeftArrow />
-            </button>
+            {!submitted ? (
+              <button
+                onClick={handleSaveScore}
+                disabled={isNameEmpty || submitting} // disable button if name is empty or submitting
+                className={`border border-white border-solid text-white font-GroteskRegular py-2 text-xl px-4 w-full rounded-[5px] my-2 flex flex-row justify-center items-center ${
+                  error || submitting ? "opacity-50 pointer-events-none" : ""
+                }`}
+              >
+                <span className="mr-1">SUBMIT SCORE</span> <LeftArrow />
+              </button>
+            ) : (
+              <a
+                href="https://banditrunning.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-white border-solid bg-white text-black font-GroteskRegular py-2 text-xl px-4 w-full rounded-[5px] my-2 flex flex-row justify-center items-center"
+              >
+                <span className="mr-1">SHOP THE DROP</span>{" "}
+                <LeftArrow color="black" />
+              </a>
+            )}
           </div>
         </>
       ) : (
@@ -131,7 +162,7 @@ const CounterBoard = ({ tapCount, score, gameOver, title }: CounterProps) => {
   return (
     <>
       {gameOver === false ? (
-        <div className="w-full flex flex-row justify-between items-center m-auto></w-full">
+        <div className="w-full flex flex-row justify-between items-center m-auto w-full">
           <YouBoard tapCount={tapCount} title="You" gameOver={gameOver} />
           <HighScore score={highScore} />
         </div>

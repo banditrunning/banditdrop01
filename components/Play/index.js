@@ -47,7 +47,7 @@ const Ground = (props) => {
       <planeBufferGeometry attach="geometry" args={[100, 100]} />
       <meshPhongMaterial
         attach="material"
-        color={"#000000"}
+        color={"#ffffff"}
         metalness={1}
         roughness={1}
       />
@@ -99,15 +99,15 @@ const ThreeScene = ({
     }
   }, [gameState]);
 
-  const cameraPosition = [0, 0, 3];
-  const fov = 50;
+  const cameraPosition = [0, 0, 1.8];
+  const fov = 52;
   const aspect = isClient ? window.innerWidth / window.innerHeight : 1;
 
   const distanceToBottom =
     Math.tan(((90 - fov / 2) * Math.PI) / 180) * cameraPosition[2];
 
   const groundY = distanceToBottom * aspect;
-  const offsetY = 2.9;
+  const offsetY = 2;
   const groundPosition = [0, -groundY + offsetY, 0];
 
   const [constantRotation, setConstantRotation] = useState(
