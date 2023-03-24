@@ -109,7 +109,7 @@ const HighScore = ({ score }: ScoreProps) => {
 };
 
 const CounterBoard = ({ tapCount, score, gameOver, title }: CounterProps) => {
-  const [highScore, setHighScore] = useState<number | null>(null);
+  const [highScore, setHighScore] = useState(null);
 
   const getHighScore = async () => {
     const { data, error } = await supabase
