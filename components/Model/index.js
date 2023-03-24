@@ -103,7 +103,7 @@ function Model({
       ref={ref}
       dispose={null}
       position={[-center.x, -center.y, -center.z]}
-      scale={[0.3, 0.3, 0.3]}
+      scale={[0.25, 0.25, 0.25]}
       {...bind()}
     >
       <group position={[0, 0, -0.01]} rotation={[-Math.PI, 0, -Math.PI]}>
