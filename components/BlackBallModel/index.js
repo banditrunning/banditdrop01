@@ -22,7 +22,7 @@ function Model({
   const [playKickSound] = useSound(kick);
 
   const [ref, api] = useSphere((index) => ({
-    mass: gameState === "selection" ? 0 : 1,
+    mass: gameState === "selection" ? 0 : 0.9,
     position: position,
     args: [scaledBallRadius],
     material: { restitution: 1.2 },
@@ -75,24 +75,33 @@ function Model({
     }
   }, [ref, onCollide]);
 
-  const bind = useGesture({
-    onPointerUp: () => {
-      console.log("onPointerUp called");
-      const upwardForce = [0, 150, 0];
-      const worldPoint = [0, 0, 0];
+  const refCurrent = ref.current;
+  const bind = useGesture(
+    {
+      onPointerUp: () => {
+        console.log("onPointerUp called");
 
-      if (api) {
-        // check if api is defined
-        api.applyForce(upwardForce, worldPoint);
-        playKickSound(); // play the kick sound effect
-      }
+        const worldPoint = [
+          refCurrent.position.x,
+          refCurrent.position.y,
+          refCurrent.position.z,
+        ];
 
-      // Increment the tap count and store it locally
-      {
-        gameState === "gameplay" && setTapCount(tapCount + 1);
-      }
+        if (api) {
+          // check if api is defined
+
+          api.velocity.set(0, 4, 0);
+          playKickSound(); // play the kick sound effect
+        }
+
+        // Increment the tap count and store it locally
+        {
+          gameState === "gameplay" && setTapCount(tapCount + 1);
+        }
+      },
     },
-  });
+    1000 / 60
+  );
 
   const [angularVelocity, setAngularVelocity] = useState([0, 0, 0]);
 
@@ -133,7 +142,7 @@ function Model({
       ref={ref}
       dispose={null}
       position={[-center.x, -center.y, -center.z]}
-      scale={[0.3, 0.3, 0.3]}
+      scale={[0.25, 0.25, 0.25]}
       {...bind()}
     >
       <group position={[0, 0, -0.01]} rotation={[-Math.PI, 0, -Math.PI]}>

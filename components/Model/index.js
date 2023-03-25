@@ -52,7 +52,7 @@ function Model({
   const size = new Vector3();
   box.getSize(size);
   const ballRadius = size.length() / (2 * Math.sqrt(3));
-  const scaledBallRadius = ballRadius * 0.3;
+  const scaledBallRadius = ballRadius * .25;
 
   // Calculate the center of the bounding box
   const center = new Vector3();

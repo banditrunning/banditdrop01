@@ -85,7 +85,7 @@ const ThreeScene = ({
   setGameOver,
 }) => {
   const { gameState, selectedBallIndex } = useContext(GameContext);
-  const [modelPosition, setModelPosition] = useState([0, -0.1, 0]);
+  const [modelPosition, setModelPosition] = useState([0, -0.43, 0]);
   const [hasStarted, setHasStarted] = useState(false);
   const [collisionCount, setCollisionCount] = useState(0);
   const [hasCollidedAfterFirstTap, setHasCollidedAfterFirstTap] =
@@ -95,24 +95,20 @@ const ThreeScene = ({
     if (gameState === "selection") {
       setModelPosition([0, 3, 0]);
     } else {
-      setModelPosition([0, -0.068, 0]);
+      setModelPosition([0, -0.43, 0]);
     }
   }, [gameState]);
 
-  const cameraPosition = [0, 0, 1.5];
-  const fov = 48;
+  const cameraPosition = [-2, 0, 1.3];
+  const fov = 49;
   const aspect = isClient ? window.innerWidth / window.innerHeight : 1;
 
   const distanceToBottom =
     Math.tan(((90 - fov / 2) * Math.PI) / 180) * cameraPosition[2];
 
   const groundY = distanceToBottom * aspect;
-  const offsetY = 1.6;
+  const offsetY = 1;
   const groundPosition = [0, -groundY + offsetY, 0];
-
-  const [constantRotation, setConstantRotation] = useState(
-    new THREE.Vector3(0, 0, 0)
-  );
 
   const tapCountRef = useRef(0);
 
@@ -184,7 +180,7 @@ const ThreeScene = ({
         <ambientLight intensity={0.1} />
         <directionalLight intensity={0.1} />
         <Suspense fallback={null}>
-          <Physics gravity={[0, -10, 0]}>
+          <Physics gravity={[0, -8, 0]}>
             {selectedBallIndex === 0 ? (
               <Model
                 position={modelPosition}
