@@ -8,6 +8,7 @@ import { useGesture } from "react-use-gesture";
 import { useSound } from "use-sound";
 import kick from "public/sounds/kick.mp4";
 import * as THREE from "three";
+import { MeshStandardMaterial } from "three";
 
 function Model({
   position,
@@ -15,6 +16,7 @@ function Model({
   clickable,
   tapCount,
   setTapCount,
+  tapHandler,
   ...props
 }) {
   const { gameState } = useContext(GameContext); // Access the gameState variable from context
@@ -26,6 +28,7 @@ function Model({
     position: position,
     args: [scaledBallRadius],
     material: { restitution: 1.2 },
+    rotation: [0, 0, 0],
     onCollide: (e) => {
       onCollide && onCollide(e, ref);
     },
@@ -52,7 +55,7 @@ function Model({
   const size = new Vector3();
   box.getSize(size);
   const ballRadius = size.length() / (2 * Math.sqrt(3));
-  const scaledBallRadius = ballRadius * .25;
+  const scaledBallRadius = ballRadius * 0.25;
 
   // Calculate the center of the bounding box
   const center = new Vector3();
@@ -80,6 +83,9 @@ function Model({
     {
       onPointerUp: () => {
         console.log("onPointerUp called");
+        {
+          gameState === "home" && tapHandler();
+        }
 
         const worldPoint = [
           refCurrent.position.x,
@@ -90,7 +96,11 @@ function Model({
         if (api) {
           // check if api is defined
 
-          api.velocity.set(0, 4, 0);
+          {
+            gameState === "home"
+              ? api.velocity.set(0, 10, 0)
+              : api.velocity.set(0, 4, 0);
+          }
           playKickSound(); // play the kick sound effect
         }
 
@@ -142,10 +152,10 @@ function Model({
       ref={ref}
       dispose={null}
       position={[-center.x, -center.y, -center.z]}
-      scale={[0.25, 0.25, 0.25]}
+      scale={gameState === "selection" ? [0.3, 0.3, 0.3] : [0.25, 0.25, 0.25]}
       {...bind()}
     >
-      <group position={[0, 0, -0.01]} rotation={[-Math.PI, 0, -Math.PI]}>
+      <group position={[0, 0, -0.01]} rotation={[0, 0, 0.9]}>
         <mesh
           castShadow
           receiveShadow
@@ -163,6 +173,16 @@ function Model({
           receiveShadow
           geometry={nodes.Solid_2.geometry}
           material={materials.Stiches}
+        />
+
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.Curve.geometry}
+          material={materials.SVGMat}
+          position={[-0.65194738, 1.03521895, 0]}
+          rotation={[0, Math.PI / 2, 0]}
+          scale={0.37675896}
         />
       </group>
     </group>

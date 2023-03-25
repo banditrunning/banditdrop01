@@ -143,7 +143,7 @@ const CameraControls = () => {
 };
 
 const ThreeScene = ({ isClient }) => {
-  const { gameState } = useContext(GameContext);
+  const { gameState, setGameState } = useContext(GameContext);
   const [modelPosition, setModelPosition] = useState([0, 3, 0]);
   const [selectedBallIndex, setSelectedBallIndex] = useState(0);
 
@@ -169,6 +169,12 @@ const ThreeScene = ({ isClient }) => {
   const [constantRotation, setConstantRotation] = useState(
     new THREE.Vector3(0, 0, 0)
   );
+
+  const tapHandler = () => {
+    setTimeout(() => {
+      setGameState("selection");
+    }, 300); // 100ms delay
+  };
 
   return (
     <div
@@ -209,7 +215,7 @@ const ThreeScene = ({ isClient }) => {
             {gameState === "selection" ? (
               <BallSelection position={modelPosition} />
             ) : (
-              <Model position={modelPosition} />
+              <Model position={modelPosition} tapHandler={tapHandler} />
             )}
             <Ground position={groundPosition} />
             <LeftBumper />

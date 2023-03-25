@@ -15,12 +15,20 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as THREE from "three";
 import GameContext from "@/context";
 import CounterBoard from "../CounterBoard";
+import { TextureLoader } from "three";
 
 extend({ OrbitControls });
 
 const Ground = (props) => {
   const [positionY, setPositionY] = useState(-2.75);
+  const [texture, setTexture] = useState();
 
+  useEffect(() => {
+    const loader = new TextureLoader();
+    loader.load("/public/static/textures/away_texture.png", (loadedTexture) => {
+      setTexture(loadedTexture);
+    });
+  }, []);
   useEffect(() => {
     const setGroundPosition = () => {
       const aspectRatio = window.innerWidth / window.innerHeight;
@@ -47,6 +55,7 @@ const Ground = (props) => {
       <planeBufferGeometry attach="geometry" args={[100, 100]} />
       <meshPhongMaterial
         attach="material"
+        map={texture}
         color={"#333333"}
         metalness={1}
         roughness={1}
@@ -171,8 +180,8 @@ const ThreeScene = ({
         limit={60}
       >
         <spotLight
-          position={[0, 20, 10]}
-          intensity={1}
+          position={[0, 5, 0]}
+          intensity={0.5}
           angle={Math.PI / 6}
           penumbra={1}
           castShadow
