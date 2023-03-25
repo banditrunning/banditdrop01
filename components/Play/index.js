@@ -184,7 +184,7 @@ const ThreeScene = ({
         <ambientLight intensity={0.1} />
         <directionalLight intensity={0.1} />
         <Suspense fallback={null}>
-          <Physics gravity={[0, -8, 0]}>
+          <Physics gravity={[0, -10, 0]}>
             {selectedBallIndex === 0 ? (
               <Model
                 position={modelPosition}
