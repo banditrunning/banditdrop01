@@ -132,7 +132,7 @@ const ThreeScene = ({
         console.log("Collision count:", updatedCount);
         console.log(tapCountRef.current);
 
-        if (tapCountRef.current >= 1 && count === 1) {
+        if (tapCountRef.current >= 1 && count >= 1) {
           console.log("Game over!");
           setGameOver(true);
         }
