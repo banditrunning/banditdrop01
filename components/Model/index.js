@@ -71,10 +71,6 @@ function Model({
         onCollide(e, ref.current.children[0]);
       };
       ref.current.addEventListener("collide", handleCollide);
-
-      return () => {
-        ref.current.removeEventListener("collide", handleCollide);
-      };
     }
   }, [ref, onCollide]);
 

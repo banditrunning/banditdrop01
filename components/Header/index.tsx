@@ -28,7 +28,7 @@ export default function Header(props: { showContent: boolean }) {
             : "opacity-0"
         }`}
       >
-        {gameState === "home" ? (
+        {gameState === "home" || gameState === "leaderboard" ? (
           <Symbol />
         ) : (
           <div onClick={handleClick}>

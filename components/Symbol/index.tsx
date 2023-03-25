@@ -1,5 +1,7 @@
 import React from "react";
 import styles from "./styles.module.scss";
+import GameContext from "@/context";
+import { useContext } from "react";
 import Link from "next/link";
 
 const Icon = () => {
@@ -17,9 +19,13 @@ const Icon = () => {
 };
 
 const Symbol = () => {
+  const { gameState, setGameState } = useContext(GameContext);
+
   return (
-    <Link href="/">
-      <Icon />
+    <Link href={"/"}>
+      <div onClick={setGameState("home")}>
+        <Icon />
+      </div>
     </Link>
   );
 };

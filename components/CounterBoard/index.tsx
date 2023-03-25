@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { createClient } from "@supabase/supabase-js";
 import LeftArrow from "../LeftArrow";
+import GraphemeSplitter from "grapheme-splitter";
+import Link from "next/link";
+import GameContext from "@/context";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -24,6 +27,7 @@ type YouProps = {
 type ScoreProps = {
   score: number;
   gameOver?: boolean;
+  highScorer: string;
 };
 type CounterProps = {
   tapCount: number;
@@ -31,6 +35,7 @@ type CounterProps = {
   gameOver?: boolean;
   title?: string;
   name?: string;
+  highScore?: string;
 };
 
 const YouBoard = ({ tapCount, title, gameOver, score }: YouProps) => {
@@ -39,6 +44,7 @@ const YouBoard = ({ tapCount, title, gameOver, score }: YouProps) => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false); // added state for submitted
   const [scoreCount, setScoreCount] = useState(tapCount);
+  const { setGameState } = useContext(GameContext);
 
   const handleSaveScore = async () => {
     console.log("handleSaveScore called");
@@ -69,10 +75,19 @@ const YouBoard = ({ tapCount, title, gameOver, score }: YouProps) => {
           <div className="z-[101] relative left-0 right-0">
             <div className="w-full flex flex-col items-center justify between w-full bg-[#C97900] rounded-md p-2">
               <div className="w-full bg-[#C97900] rounded-md p-2 flex flex-col">
-                <div className="text-lg text-black pb-2 uppercase font-GroteskMedium">
-                  {title}
+                <div className="flex flex-row items-center justify-between  pb-2">
+                  <div className="text-lg text-black uppercase font-GroteskMedium">
+                    {title}
+                  </div>
+                  {submitted && (
+                    <Link href={"/Leaderboard"}>
+                      <div className="text-sm text-[#C97900] font-GroteskRegular bg-black uppercase font-GroteskMedium flex flex-row items-center justify-between rounded-[2px] px-2 active:opacity:75">
+                        VIEW SCOREBOARD <LeftArrow size={14} color="#C97900" />
+                      </div>
+                    </Link>
+                  )}
                 </div>
-                <div className="text-black font-GroteskRegular bg-[#C9C3AD] rounded-sm px-1 text-7xl rounded-[5px]">
+                <div className="text-black font-GroteskRegular bg-[#C9C3AD] rounded-[5px] px-1 text-7xl rounded-[5px]">
                   {gameOver ? scoreCount : tapCount}
                 </div>
               </div>
@@ -81,13 +96,13 @@ const YouBoard = ({ tapCount, title, gameOver, score }: YouProps) => {
                   required
                   type="text"
                   placeholder="YOUR NAME*"
-                  value={name}
+                  value={!submitted ? name : "SCORE RECORDED"}
                   onChange={handleNameChange}
                   onFocus={handleFocus}
                   onBlur={handleBlur}
                   className={`text-3xl placeholder-black bg-[#C9C3AD] rounded-[5px] px-2 py-2 mb-2 w-full uppercase ${
                     error ? "text-red-600" : "text-black"
-                  }`}
+                  } ${submitted && "text-[#C97900] pointer-events-none"}`}
                 />
               </div>
             </div>
@@ -121,7 +136,7 @@ const YouBoard = ({ tapCount, title, gameOver, score }: YouProps) => {
           <div className="text-lg text-black pb-2 uppercase font-GroteskMedium">
             {title}
           </div>
-          <div className="text-black font-GroteskRegular bg-[#C9C3AD] rounded-sm px-1 text-4xl">
+          <div className="text-black font-GroteskRegular bg-[#C9C3AD] rounded-[5px] px-1 text-4xl">
             {gameOver ? scoreCount : tapCount}
           </div>
         </div>
@@ -130,26 +145,36 @@ const YouBoard = ({ tapCount, title, gameOver, score }: YouProps) => {
   );
 };
 
-const HighScore = ({ score }: ScoreProps) => {
+const HighScore = ({ score, highScorer }: ScoreProps) => {
+  const splitter = new GraphemeSplitter();
+  const graphemes = splitter.splitGraphemes(highScorer);
+  const truncatedScorer =
+    highScorer && graphemes.length > 3
+      ? `${graphemes.slice(0, 4).join("")}...`
+      : highScorer;
+
   return (
     <div className="w-full bg-[#BF3E2B] rounded-md p-2 flex flex-col ml-1">
       <div className="text-lg text-black pb-2 uppercase font-GroteskMedium">
         High Score
       </div>
-      <div className="text-4xl text-black font-GroteskRegular bg-[#C4A6A8] rounded-sm px-1">
+      <div className="text-4xl text-black font-GroteskRegular bg-[#C4A6A8] rounded-[5px] px-1 flex flex-row items-center justify-between">
         {score ?? 0}
+        <span className="text-lg bg-[#BF3E2B] text-white rounded-[5px] px-2 py-1 opacity-50">
+          {truncatedScorer}
+        </span>
       </div>
     </div>
   );
 };
-
 const CounterBoard = ({ tapCount, score, gameOver, title }: CounterProps) => {
   const [highScore, setHighScore] = useState(0);
+  const [highScorer, setHighScorer] = useState("");
 
   const getHighScore = async () => {
     const { data, error } = await supabase
       .from("scores")
-      .select("tapCount")
+      .select("name, tapCount")
       .order("tapCount", { ascending: false })
       .limit(1);
 
@@ -157,18 +182,20 @@ const CounterBoard = ({ tapCount, score, gameOver, title }: CounterProps) => {
       console.error(error);
     } else {
       setHighScore(data?.[0]?.tapCount || null);
+      setHighScorer(data?.[0]?.name || null);
     }
   };
 
   useEffect(() => {
     getHighScore();
   }, []);
+
   return (
     <>
       {gameOver === false ? (
         <div className="w-full flex flex-row justify-between items-center m-auto w-full">
           <YouBoard tapCount={tapCount} title="You" gameOver={gameOver} />
-          <HighScore score={highScore} />
+          <HighScore score={highScore} highScorer={highScorer} />
         </div>
       ) : (
         <YouBoard tapCount={tapCount} title="Final Score" gameOver={gameOver} />
