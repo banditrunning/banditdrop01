@@ -29,12 +29,14 @@ const Cover: React.FC = () => {
       tapCount?: number;
       setTapCount?: React.Dispatch<React.SetStateAction<number>>;
       rotation: [number, number, number];
+      tapHandler?: () => void;
     }>;
     position: [number, number, number];
     clickable?: boolean;
     tapCount?: number;
     setTapCount?: React.Dispatch<React.SetStateAction<number>>;
     rotation?: [number, number, number];
+    tapHandler?: () => void;
   }
 
   const balls: Ball[] = [
@@ -46,6 +48,7 @@ const Cover: React.FC = () => {
         tapCount,
         setTapCount,
         rotation,
+        tapHandler,
       }) => (
         <Model
           position={position}
@@ -54,6 +57,7 @@ const Cover: React.FC = () => {
           tapCount={tapCount}
           setTapCount={setTapCount}
           rotation={rotation}
+          tapHandler={tapHandler}
         />
       ),
       position: [0, 0, 0],
@@ -68,6 +72,7 @@ const Cover: React.FC = () => {
         tapCount,
         setTapCount,
         rotation,
+        tapHandler,
       }) => (
         <BlackBallModel
           position={position}
@@ -76,6 +81,7 @@ const Cover: React.FC = () => {
           tapCount={tapCount}
           setTapCount={setTapCount}
           rotation={rotation}
+          tapHandler={tapHandler}
         />
       ),
       position: [0, 0, 0],
