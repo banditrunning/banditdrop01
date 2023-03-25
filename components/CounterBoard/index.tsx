@@ -38,13 +38,14 @@ const YouBoard = ({ tapCount, title, gameOver, score }: YouProps) => {
   const [error, setError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false); // added state for submitted
+  const [scoreCount, setScoreCount] = useState(tapCount);
 
   const handleSaveScore = async () => {
     console.log("handleSaveScore called");
     setSubmitting(true);
     const { data, error } = await supabase
       .from("scores")
-      .insert([{ name: name, tapCount: tapCount }]);
+      .insert([{ name: name, tapCount: scoreCount }]);
     setSubmitting(false);
     if (error) {
       console.error(error);
@@ -72,11 +73,12 @@ const YouBoard = ({ tapCount, title, gameOver, score }: YouProps) => {
                   {title}
                 </div>
                 <div className="text-black font-GroteskRegular bg-[#C9C3AD] rounded-sm px-1 text-7xl rounded-[5px]">
-                  {tapCount}
+                  {gameOver ? scoreCount : tapCount}
                 </div>
               </div>
               <div className="w-full flex flex-col justify-center items-center px-2 m-auto">
                 <input
+                  required
                   type="text"
                   placeholder="YOUR NAME*"
                   value={name}
@@ -94,7 +96,9 @@ const YouBoard = ({ tapCount, title, gameOver, score }: YouProps) => {
                 onClick={handleSaveScore}
                 disabled={isNameEmpty || submitting} // disable button if name is empty or submitting
                 className={`border border-white border-solid text-white font-GroteskRegular py-2 text-xl px-4 w-full rounded-[5px] my-2 flex flex-row justify-center items-center ${
-                  error || submitting ? "opacity-50 pointer-events-none" : ""
+                  error || submitting
+                    ? "opacity-50 pointer-events-none"
+                    : "opacity-100"
                 }`}
               >
                 <span className="mr-1">SUBMIT SCORE</span> <LeftArrow />
@@ -118,7 +122,7 @@ const YouBoard = ({ tapCount, title, gameOver, score }: YouProps) => {
             {title}
           </div>
           <div className="text-black font-GroteskRegular bg-[#C9C3AD] rounded-sm px-1 text-4xl">
-            {tapCount}
+            {gameOver ? scoreCount : tapCount}
           </div>
         </div>
       )}
