@@ -23,6 +23,8 @@ type YouProps = {
   title: string;
   gameOver?: boolean;
   score?: number;
+  setGameOver?: any;
+  setTapCount?: any;
 };
 type ScoreProps = {
   score: number;
@@ -36,9 +38,18 @@ type CounterProps = {
   title?: string;
   name?: string;
   highScore?: string;
+  setGameOver?: any;
+  setTapCount?: any;
 };
 
-const YouBoard = ({ tapCount, title, gameOver, score }: YouProps) => {
+const YouBoard = ({
+  tapCount,
+  title,
+  gameOver,
+  score,
+  setGameOver,
+  setTapCount,
+}: YouProps) => {
   const [name, setName] = useState("");
   const [error, setError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -60,13 +71,17 @@ const YouBoard = ({ tapCount, title, gameOver, score }: YouProps) => {
       setSubmitted(true);
     }
   };
+  const handleButtonClick = () => {
+    setGameOver(false); // call setGameOver function passed from parent
+    setTapCount(0);
+  };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
     setError(e.target.value.trim() === "");
   };
 
-  const isNameEmpty = name.trim() === "";
+  const isNameEmpty = name.trim() === "" || name.trim() === "YOUR NAME*";
 
   return (
     <>
@@ -106,24 +121,31 @@ const YouBoard = ({ tapCount, title, gameOver, score }: YouProps) => {
                 />
               </div>
             </div>
+            <button
+              onClick={handleButtonClick}
+              className="border border-white border-solid text-white font-GroteskRegular py-2 text-xl px-4 w-full rounded-[5px] my-2 flex flex-row justify-center items-center"
+            >
+              <span className="mr-1">RETRY</span> <LeftArrow />
+            </button>
             {!submitted ? (
               <button
                 onClick={handleSaveScore}
                 disabled={isNameEmpty || submitting} // disable button if name is empty or submitting
-                className={`border border-white border-solid text-white font-GroteskRegular py-2 text-xl px-4 w-full rounded-[5px] my-2 flex flex-row justify-center items-center ${
+                className={`bg-white border border-white border-solid text-black font-GroteskRegular py-2 text-xl px-4 w-full rounded-[5px] my-2 flex flex-row justify-center items-center ${
                   error || submitting
                     ? "opacity-50 pointer-events-none"
                     : "opacity-100"
                 }`}
               >
-                <span className="mr-1">SUBMIT SCORE</span> <LeftArrow />
+                <span className="mr-1">SUBMIT SCORE</span>{" "}
+                <LeftArrow color="black" />
               </button>
             ) : (
               <a
                 href="https://banditrunning.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-white border-solid bg-white text-black font-GroteskRegular py-2 text-xl px-4 w-full rounded-[5px] my-2 flex flex-row justify-center items-center"
+                className="border border-[#C9C3AD] border-solid bg-[#C9C3AD] text-black font-GroteskRegular py-2 text-xl px-4 w-full rounded-[5px] my-2 flex flex-row justify-center items-center"
               >
                 <span className="mr-1">SHOP THE DROP</span>{" "}
                 <LeftArrow color="black" />
@@ -167,7 +189,14 @@ const HighScore = ({ score, highScorer }: ScoreProps) => {
     </div>
   );
 };
-const CounterBoard = ({ tapCount, score, gameOver, title }: CounterProps) => {
+const CounterBoard = ({
+  tapCount,
+  score,
+  gameOver,
+  title,
+  setGameOver,
+  setTapCount,
+}: CounterProps) => {
   const [highScore, setHighScore] = useState(0);
   const [highScorer, setHighScorer] = useState("");
 
@@ -194,11 +223,23 @@ const CounterBoard = ({ tapCount, score, gameOver, title }: CounterProps) => {
     <>
       {gameOver === false ? (
         <div className="w-full flex flex-row justify-between items-center m-auto w-full">
-          <YouBoard tapCount={tapCount} title="You" gameOver={gameOver} />
+          <YouBoard
+            tapCount={tapCount}
+            title="You"
+            gameOver={gameOver}
+            setGameOver={setGameOver}
+            setTapCount={setTapCount}
+          />
           <HighScore score={highScore} highScorer={highScorer} />
         </div>
       ) : (
-        <YouBoard tapCount={tapCount} title="Final Score" gameOver={gameOver} />
+        <YouBoard
+          tapCount={tapCount}
+          title="Final Score"
+          gameOver={gameOver}
+          setGameOver={setGameOver}
+          setTapCount={setTapCount}
+        />
       )}
     </>
   );

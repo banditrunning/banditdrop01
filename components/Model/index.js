@@ -83,12 +83,6 @@ function Model({
           gameState === "home" && tapHandler();
         }
 
-        const worldPoint = [
-          refCurrent.position.x,
-          refCurrent.position.y,
-          refCurrent.position.z,
-        ];
-
         if (api) {
           // check if api is defined
 
@@ -97,6 +91,8 @@ function Model({
               ? api.velocity.set(0, 10, 0)
               : api.velocity.set(0, 4, 0);
           }
+          api.applyTorque([0, 1, 0]);
+
           playKickSound(); // play the kick sound effect
         }
 

@@ -243,7 +243,12 @@ const Play = ({ ball }) => {
           gameOver === true ? "z-[1000]" : ""
         }`}
       >
-        <CounterBoard tapCount={tapCount} gameOver={gameOver} />
+        <CounterBoard
+          tapCount={tapCount}
+          setTapCount={setTapCount}
+          gameOver={gameOver}
+          setGameOver={setGameOver}
+        />
       </div>
     </>
   );
