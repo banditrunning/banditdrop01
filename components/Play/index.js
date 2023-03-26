@@ -199,6 +199,7 @@ const ThreeScene = ({
                 clickable
                 setTapCount={gameState === "gameplay" && setTapCount}
                 tapCount={gameState === "gameplay" && tapCount}
+                gameOver={gameOver}
               />
             ) : (
               <BlackBallModel
@@ -207,6 +208,7 @@ const ThreeScene = ({
                 clickable
                 setTapCount={setTapCount}
                 tapCount={tapCount}
+                gameOver={gameOver}
               />
             )}
             <Ground position={groundPosition} />
@@ -244,6 +246,7 @@ const Play = ({ ball }) => {
         setTapCount={setTapCount}
         tapCount={tapCount}
         setGameOver={setGameOver}
+        gameOver={gameOver}
       />
       <div
         className={`w-full top-[74px] left-0 right-0 fixed ${
