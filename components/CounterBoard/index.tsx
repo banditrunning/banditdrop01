@@ -240,7 +240,19 @@ const YouBoard = ({
               tapCount >= 10 ? "bg-[#C9C3AD]" : "bg-white"
             } text-black font-GroteskRegular rounded-[5px] px-1 text-4xl`}
           >
-            {gameOver ? scoreCount : tapCount}
+            {gameOver ? (
+              <span>
+                {scoreCount}
+                {scoreCount < 10 && <span className="text-[#c7c7c7]">/10</span>}
+              </span>
+            ) : (
+              <>
+                <span>
+                  {tapCount}
+                  {tapCount < 10 && <span className="text-[#c7c7c7]">/10</span>}
+                </span>
+              </>
+            )}
           </div>
         </div>
       )}
