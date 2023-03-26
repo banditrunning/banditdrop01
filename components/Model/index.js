@@ -80,13 +80,13 @@ function Model({
   const refCurrent = ref.current;
   const tapTargetRef = useRef();
   const [tapTargetRadius, setTapTargetRadius] = useState(
-    scaledBallRadius * 1.3
+    scaledBallRadius * 1.1
   );
   useEffect(() => {
     tapTargetRef.current.geometry = new THREE.SphereBufferGeometry(
       tapTargetRadius,
-      40,
-      40
+      32,
+      32
     );
     tapTargetRef.current.material.transparent = true;
     tapTargetRef.current.material.opacity = 0;
@@ -112,8 +112,8 @@ function Model({
           }
 
           {
-            (tapCount < 20 && playKickSound()) ||
-              (tapCount > 20 &&
+            (tapCount < 10 && playKickSound()) ||
+              (tapCount > 10 &&
                 gameState === "gameplay" &&
                 playMetalKickSound());
           } // play the kick sound effect
@@ -182,7 +182,7 @@ function Model({
             receiveShadow
             geometry={nodes.Solid.geometry}
             material={
-              tapCount >= 20
+              tapCount >= 10
                 ? new MeshStandardMaterial({
                     color: "#d4af37",
                     roughness: 0,
@@ -197,7 +197,7 @@ function Model({
             receiveShadow
             geometry={nodes.Solid_1.geometry}
             material={
-              tapCount >= 20
+              tapCount >= 10
                 ? new MeshStandardMaterial({
                     color: "#E2BF36",
                     roughness: 0,
