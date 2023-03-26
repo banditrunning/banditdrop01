@@ -85,8 +85,8 @@ function Model({
   useEffect(() => {
     tapTargetRef.current.geometry = new THREE.SphereBufferGeometry(
       tapTargetRadius,
-      32,
-      32
+      40,
+      40
     );
     tapTargetRef.current.material.transparent = true;
     tapTargetRef.current.material.opacity = 0;

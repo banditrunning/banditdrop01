@@ -88,10 +88,18 @@ const YouBoard = ({
       {gameOver === true ? (
         <>
           <div className="z-[101] relative left-0 right-0">
-            <div className="w-full flex flex-col items-center justify between w-full bg-[#C97900] rounded-md p-2">
-              <div className="w-full bg-[#C97900] rounded-md p-2 flex flex-col">
+            <div
+              className={`w-full flex flex-col items-center justify between w-full ${
+                tapCount >= 10 ? "bg-[#C97900]" : "bg-[#808080]"
+              } rounded-md p-2`}
+            >
+              <div className="w-full rounded-md p-2 flex flex-col">
                 <div className="flex flex-row items-center justify-between  pb-2">
-                  <div className="text-lg text-black uppercase font-GroteskMedium">
+                  <div
+                    className={`text-lg ${
+                      tapCount >= 10 ? "text-black" : "bg-none text-white"
+                    } uppercase font-GroteskMedium`}
+                  >
                     {title}
                   </div>
                   {submitted && (
@@ -102,7 +110,11 @@ const YouBoard = ({
                     </Link>
                   )}
                 </div>
-                <div className="text-black font-GroteskRegular bg-[#C9C3AD] rounded-[5px] px-1 text-7xl rounded-[5px]">
+                <div
+                  className={`${
+                    tapCount > 10 ? "bg-[#C9C3AD]" : "bg-white"
+                  } text-black font-GroteskRegular rounded-[5px] px-1 text-7xl rounded-[5px]`}
+                >
                   {gameOver ? scoreCount : tapCount}
                 </div>
               </div>
@@ -115,50 +127,62 @@ const YouBoard = ({
                   onChange={handleNameChange}
                   onFocus={handleFocus}
                   onBlur={handleBlur}
-                  className={`text-3xl placeholder-black bg-[#C9C3AD] rounded-[5px] px-2 py-2 mb-2 w-full uppercase ${
+                  className={`text-3xl placeholder-black ${
+                    tapCount > 10 ? "bg-[#C9C3AD]" : "bg-white"
+                  } rounded-[5px] px-2 py-2 mb-2 w-full uppercase ${
                     error ? "text-red-600" : "text-black"
                   } ${submitted && "text-[#C97900] pointer-events-none"}`}
                 />
+                {!submitted && tapCount >= 10 && (
+                  <button
+                    onClick={handleSaveScore}
+                    disabled={isNameEmpty || submitting} // disable button if name is empty or submitting
+                    className={`bg-white border border-white border-solid text-black font-GroteskRegular py-2 text-xl w-full rounded-[5px] my-2 flex flex-row justify-center items-center ${
+                      error || submitting
+                        ? "opacity-50 pointer-events-none"
+                        : "opacity-100"
+                    }`}
+                  >
+                    {tapCount >= 10 ? (
+                      <span className="mr-1">SUBMIT SCORE</span>
+                    ) : (
+                      <a
+                        href="https://banditrunning.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="border border-[#C9C3AD] border-solid bg-[#C9C3AD] text-black font-GroteskRegular py-2 text-xl w-full rounded-[5px] my-2 flex flex-row justify-center items-center"
+                      >
+                        <span className="mr-1">SHOP THE DROP</span>{" "}
+                        <LeftArrow color="black" />
+                      </a>
+                    )}
+                    <LeftArrow color="black" />
+                  </button>
+                )}
               </div>
             </div>
             <button
               onClick={handleButtonClick}
               className="border border-white border-solid text-white font-GroteskRegular py-2 text-xl px-4 w-full rounded-[5px] my-2 flex flex-row justify-center items-center"
             >
-              <span className="mr-1">RETRY</span> <LeftArrow />
+              <span className="mr-1">PLAY AGAIN</span> <LeftArrow />
             </button>
-            {!submitted ? (
-              <button
-                onClick={handleSaveScore}
-                disabled={isNameEmpty || submitting} // disable button if name is empty or submitting
-                className={`bg-white border border-white border-solid text-black font-GroteskRegular py-2 text-xl px-4 w-full rounded-[5px] my-2 flex flex-row justify-center items-center ${
-                  error || submitting
-                    ? "opacity-50 pointer-events-none"
-                    : "opacity-100"
-                }`}
-              >
-                <span className="mr-1">SUBMIT SCORE</span>{" "}
-                <LeftArrow color="black" />
-              </button>
-            ) : (
-              <a
-                href="https://banditrunning.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border border-[#C9C3AD] border-solid bg-[#C9C3AD] text-black font-GroteskRegular py-2 text-xl px-4 w-full rounded-[5px] my-2 flex flex-row justify-center items-center"
-              >
-                <span className="mr-1">SHOP THE DROP</span>{" "}
-                <LeftArrow color="black" />
-              </a>
-            )}
           </div>
         </>
       ) : (
-        <div className="w-full bg-[#C97900] rounded-md p-2 flex flex-col mr-1">
+        <div
+          className={`${
+            tapCount >= 10 ? "bg-[#C97900]" : "bg-[#808080]"
+          } w-full rounded-md p-2 flex flex-col mr-1`}
+        >
           <div className="text-lg text-black pb-2 uppercase font-GroteskMedium">
             {title}
           </div>
-          <div className="text-black font-GroteskRegular bg-[#C9C3AD] rounded-[5px] px-1 text-4xl">
+          <div
+            className={`${
+              tapCount >= 10 ? "bg-[#C9C3AD]" : "bg-white"
+            } text-black font-GroteskRegular rounded-[5px] px-1 text-4xl`}
+          >
             {gameOver ? scoreCount : tapCount}
           </div>
         </div>
