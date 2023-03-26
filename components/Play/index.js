@@ -16,6 +16,8 @@ import * as THREE from "three";
 import GameContext from "@/context";
 import CounterBoard from "../CounterBoard";
 import { TextureLoader } from "three";
+import useSound from "use-sound";
+import powerUp from "public/sounds/powerUp.mp4";
 
 extend({ OrbitControls });
 
@@ -221,6 +223,7 @@ const Play = ({ ball }) => {
   const [isClient, setIsClient] = useState(false);
   const [tapCount, setTapCount] = useState(0);
   const [gameOver, setGameOver] = useState(false);
+  const [playPowerUp] = useSound(powerUp);
 
   useEffect(() => {
     setIsClient(true);
@@ -228,6 +231,10 @@ const Play = ({ ball }) => {
 
   if (!isClient) {
     return null;
+  }
+
+  {
+    tapCount === 20 && playPowerUp();
   }
 
   return (

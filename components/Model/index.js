@@ -7,6 +7,7 @@ import GameContext from "@/context";
 import { useGesture } from "react-use-gesture";
 import { useSound } from "use-sound";
 import kick from "public/sounds/kick.mp4";
+import kickMetal from "public/sounds/kickMetal.mp4";
 import * as THREE from "three";
 import { MeshStandardMaterial } from "three";
 
@@ -22,6 +23,7 @@ function Model({
   const { gameState } = useContext(GameContext); // Access the gameState variable from context
   const { nodes, materials } = useGLTF("../models/Football.glb");
   const [playKickSound] = useSound(kick);
+  const [playMetalKickSound] = useSound(kickMetal);
 
   const [ref, api] = useSphere((index) => ({
     mass: gameState === "selection" ? 0 : 0.9,
@@ -92,7 +94,9 @@ function Model({
               : api.velocity.set(0, 4, 0);
           }
 
-          playKickSound(); // play the kick sound effect
+          {
+            tapCount < 20 ? playKickSound() : playMetalKickSound();
+          } // play the kick sound effect
         }
 
         // Increment the tap count and store it locally
