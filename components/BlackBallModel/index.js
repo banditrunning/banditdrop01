@@ -7,6 +7,7 @@ import GameContext from "@/context";
 import { useGesture } from "react-use-gesture";
 import { useSound } from "use-sound";
 import kick from "public/sounds/kick.mp4";
+import kickMetal from "public/sounds/kickMetal.mp4";
 import * as THREE from "three";
 import { MeshStandardMaterial } from "three";
 
@@ -17,12 +18,12 @@ function Model({
   tapCount,
   setTapCount,
   tapHandler,
-
   ...props
 }) {
   const { gameState } = useContext(GameContext); // Access the gameState variable from context
   const { nodes, materials } = useGLTF("../models/Football.glb");
   const [playKickSound] = useSound(kick);
+  const [playMetalKickSound] = useSound(kickMetal);
 
   const [ref, api] = useSphere((index) => ({
     mass: gameState === "selection" ? 0 : 0.9,
@@ -93,7 +94,16 @@ function Model({
               : api.velocity.set(0, 4, 0);
           }
 
-          playKickSound(); // play the kick sound effect
+          {
+            (tapCount < 20 && playKickSound()) ||
+              (tapCount > 20 &&
+                gameState === "gameplay" &&
+                playMetalKickSound());
+          } // play the kick sound effect
+
+          {
+            gameState === "home" && playKickSound();
+          }
         }
 
         // Increment the tap count and store it locally
@@ -153,7 +163,7 @@ function Model({
           receiveShadow
           geometry={nodes.Solid.geometry}
           material={
-            tapCount > 20
+            tapCount >= 20
               ? new MeshStandardMaterial({
                   color: "#d4af37",
                   roughness: 0,
@@ -168,7 +178,7 @@ function Model({
           receiveShadow
           geometry={nodes.Solid_1.geometry}
           material={
-            tapCount > 20
+            tapCount >= 20
               ? new MeshStandardMaterial({
                   color: "#E2BF36",
                   roughness: 0,

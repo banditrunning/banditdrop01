@@ -95,8 +95,15 @@ function Model({
           }
 
           {
-            tapCount < 20 ? playKickSound() : playMetalKickSound();
+            (tapCount < 20 && playKickSound()) ||
+              (tapCount > 20 &&
+                gameState === "gameplay" &&
+                playMetalKickSound());
           } // play the kick sound effect
+
+          {
+            gameState === "home" && playKickSound();
+          }
         }
 
         // Increment the tap count and store it locally
