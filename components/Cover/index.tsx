@@ -134,7 +134,7 @@ const Cover: React.FC = () => {
           <div>Touch?</div>
           <div className=" py-3 font-GroteskRegular text-white uppercase text-[16px] leading-[1rem]">
             <div className="text-[#ffffff] mb-1">
-              Get 10 juggles Unlock the drop
+              Get 10 juggles, Unlock the drop
             </div>
             <div className="text-[#767676] max-w-[300px]">
               High score Sunday 11:59pm est wins one of everything
