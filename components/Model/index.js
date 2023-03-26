@@ -17,7 +17,6 @@ function Model({
   tapCount,
   setTapCount,
   tapHandler,
-  updatedCount,
   ...props
 }) {
   const { gameState } = useContext(GameContext); // Access the gameState variable from context
