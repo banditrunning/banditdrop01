@@ -113,7 +113,7 @@ function Model({
 
           {
             (tapCount < 10 && playKickSound()) ||
-              (tapCount > 10 &&
+              (tapCount >= 10 &&
                 gameState === "gameplay" &&
                 playMetalKickSound());
           } // play the kick sound effect
