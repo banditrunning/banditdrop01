@@ -236,7 +236,7 @@ const Play = ({ ball }) => {
   }
 
   {
-    tapCount === 20 && playPowerUp();
+    tapCount === 10 && playPowerUp();
   }
 
   return (
