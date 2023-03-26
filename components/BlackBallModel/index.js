@@ -164,7 +164,7 @@ function Model({
           receiveShadow
           geometry={nodes.Solid.geometry}
           material={
-            tapCount >= 20 && gameOver === false
+            tapCount >= 20
               ? new MeshStandardMaterial({
                   color: "#d4af37",
                   roughness: 0,
@@ -179,7 +179,7 @@ function Model({
           receiveShadow
           geometry={nodes.Solid_1.geometry}
           material={
-            tapCount >= 20 && gameOver === false
+            tapCount >= 20
               ? new MeshStandardMaterial({
                   color: "#E2BF36",
                   roughness: 0,
@@ -200,7 +200,7 @@ function Model({
           castShadow
           receiveShadow
           geometry={nodes.Curve.geometry}
-          material={materials.Black}
+          material={tapCount >= 20 ? materials.White : materials.Black}
           position={[-0.65194738, 1.03521895, 0]}
           rotation={[0, Math.PI / 2, 0]}
           scale={0.37675896}
