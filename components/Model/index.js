@@ -80,7 +80,7 @@ function Model({
   const refCurrent = ref.current;
   const tapTargetRef = useRef();
   const [tapTargetRadius, setTapTargetRadius] = useState(
-    scaledBallRadius * 1.1
+    scaledBallRadius * 1.3
   );
   useEffect(() => {
     tapTargetRef.current.geometry = new THREE.SphereBufferGeometry(
