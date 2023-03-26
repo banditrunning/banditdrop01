@@ -17,6 +17,7 @@ function Model({
   tapCount,
   setTapCount,
   tapHandler,
+  updatedCount,
   ...props
 }) {
   const { gameState } = useContext(GameContext); // Access the gameState variable from context
@@ -91,7 +92,6 @@ function Model({
               ? api.velocity.set(0, 10, 0)
               : api.velocity.set(0, 4, 0);
           }
-          api.applyTorque([0, 1, 0]);
 
           playKickSound(); // play the kick sound effect
         }
@@ -152,13 +152,31 @@ function Model({
           castShadow
           receiveShadow
           geometry={nodes.Solid.geometry}
-          material={materials.White}
+          material={
+            tapCount > 20
+              ? new MeshStandardMaterial({
+                  color: "#d4af37",
+                  roughness: 0,
+                  metalness: 1,
+                  shininess: 1,
+                })
+              : materials.White
+          }
         />
         <mesh
           castShadow
           receiveShadow
           geometry={nodes.Solid_1.geometry}
-          material={materials.Black}
+          material={
+            tapCount > 20
+              ? new MeshStandardMaterial({
+                  color: "#E2BF36",
+                  roughness: 0,
+                  metalness: 1,
+                  shininess: 1,
+                })
+              : materials.Black
+          }
         />
         <mesh
           castShadow

@@ -17,6 +17,7 @@ function Model({
   tapCount,
   setTapCount,
   tapHandler,
+  updatedCount,
   ...props
 }) {
   const { gameState } = useContext(GameContext); // Access the gameState variable from context
@@ -71,10 +72,6 @@ function Model({
         onCollide(e, ref.current.children[0]);
       };
       ref.current.addEventListener("collide", handleCollide);
-
-      return () => {
-        ref.current.removeEventListener("collide", handleCollide);
-      };
     }
   }, [ref, onCollide]);
 
@@ -87,12 +84,6 @@ function Model({
           gameState === "home" && tapHandler();
         }
 
-        const worldPoint = [
-          refCurrent.position.x,
-          refCurrent.position.y,
-          refCurrent.position.z,
-        ];
-
         if (api) {
           // check if api is defined
 
@@ -101,6 +92,7 @@ function Model({
               ? api.velocity.set(0, 10, 0)
               : api.velocity.set(0, 4, 0);
           }
+
           playKickSound(); // play the kick sound effect
         }
 
@@ -160,13 +152,31 @@ function Model({
           castShadow
           receiveShadow
           geometry={nodes.Solid.geometry}
-          material={materials.Black}
+          material={
+            tapCount > 20
+              ? new MeshStandardMaterial({
+                  color: "#d4af37",
+                  roughness: 0,
+                  metalness: 1,
+                  shininess: 1,
+                })
+              : materials.Black
+          }
         />
         <mesh
           castShadow
           receiveShadow
           geometry={nodes.Solid_1.geometry}
-          material={materials.White}
+          material={
+            tapCount > 20
+              ? new MeshStandardMaterial({
+                  color: "#E2BF36",
+                  roughness: 0,
+                  metalness: 1,
+                  shininess: 1,
+                })
+              : materials.White
+          }
         />
         <mesh
           castShadow
