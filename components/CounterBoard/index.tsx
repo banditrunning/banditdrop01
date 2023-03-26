@@ -51,18 +51,31 @@ const YouBoard = ({
   setTapCount,
 }: YouProps) => {
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [error, setError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false); // added state for submitted
   const [scoreCount, setScoreCount] = useState(tapCount);
+  const [emailError, setEmailError] = useState("");
   const { setGameState } = useContext(GameContext);
 
   const handleSaveScore = async () => {
     console.log("handleSaveScore called");
     setSubmitting(true);
+    if (email.trim() === "") {
+      setEmailError("ENTER A VALID EMAIL");
+      setSubmitting(false);
+      return;
+    }
+    const emailRegex = /\S+@\S+\.\S+/; // regex to match email format
+    if (!emailRegex.test(email)) {
+      setEmailError("ENTER A VALID EMAIL");
+      setSubmitting(false);
+      return;
+    }
     const { data, error } = await supabase
       .from("scores")
-      .insert([{ name: name, tapCount: scoreCount }]);
+      .insert([{ name: name, email: email, tapCount: scoreCount }]);
     setSubmitting(false);
     if (error) {
       console.error(error);
@@ -71,6 +84,7 @@ const YouBoard = ({
       setSubmitted(true);
     }
   };
+
   const handleButtonClick = () => {
     setGameOver(false); // call setGameOver function passed from parent
     setTapCount(0);
@@ -81,7 +95,14 @@ const YouBoard = ({
     setError(e.target.value.trim() === "");
   };
 
-  const isNameEmpty = name.trim() === "" || name.trim() === "YOUR NAME*";
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const emailRegex = /\S+@\S+\.\S+/; // regex to match email format
+    const email = e.target.value.trim();
+    setEmail(email);
+  };
+
+  const isNameEmpty = name.trim() === "" || name.trim() === "YOUR INITALS*";
+  const isEmailEmpty = email.trim() === "" || email.trim() === "YOUR EMAIL*";
 
   return (
     <>
@@ -90,14 +111,14 @@ const YouBoard = ({
           <div className="z-[101] relative left-0 right-0">
             <div
               className={`w-full flex flex-col items-center justify between w-full ${
-                tapCount >= 10 ? "bg-[#C97900]" : "bg-[#808080]"
+                scoreCount >= 10 ? "bg-[#C97900]" : "bg-[#808080]"
               } rounded-md p-2`}
             >
               <div className="w-full rounded-md p-2 flex flex-col">
                 <div className="flex flex-row items-center justify-between  pb-2">
                   <div
                     className={`text-lg ${
-                      tapCount >= 10 ? "text-black" : "bg-none text-white"
+                      scoreCount >= 10 ? "text-black" : "bg-none text-white"
                     } uppercase font-GroteskMedium`}
                   >
                     {title}
@@ -112,61 +133,97 @@ const YouBoard = ({
                 </div>
                 <div
                   className={`${
-                    tapCount > 10 ? "bg-[#C9C3AD]" : "bg-white"
+                    scoreCount >= 10 ? "bg-[#C9C3AD]" : "bg-white"
                   } text-black font-GroteskRegular rounded-[5px] px-1 text-7xl rounded-[5px]`}
                 >
                   {gameOver ? scoreCount : tapCount}
                 </div>
               </div>
-              <div className="w-full flex flex-col justify-center items-center px-2 m-auto">
-                <input
-                  required
-                  type="text"
-                  placeholder="YOUR NAME*"
-                  value={!submitted ? name : "SCORE RECORDED"}
-                  onChange={handleNameChange}
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                  className={`text-3xl placeholder-black ${
-                    tapCount > 10 ? "bg-[#C9C3AD]" : "bg-white"
-                  } rounded-[5px] px-2 py-2 mb-2 w-full uppercase ${
-                    error ? "text-red-600" : "text-black"
-                  } ${submitted && "text-[#C97900] pointer-events-none"}`}
-                />
-                {!submitted && tapCount >= 10 && (
-                  <button
-                    onClick={handleSaveScore}
-                    disabled={isNameEmpty || submitting} // disable button if name is empty or submitting
-                    className={`bg-white border border-white border-solid text-black font-GroteskRegular py-2 text-xl w-full rounded-[5px] my-2 flex flex-row justify-center items-center ${
-                      error || submitting
-                        ? "opacity-50 pointer-events-none"
-                        : "opacity-100"
-                    }`}
-                  >
-                    {tapCount >= 10 ? (
-                      <span className="mr-1">SUBMIT SCORE</span>
-                    ) : (
-                      <a
-                        href="https://banditrunning.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="border border-[#C9C3AD] border-solid bg-[#C9C3AD] text-black font-GroteskRegular py-2 text-xl w-full rounded-[5px] my-2 flex flex-row justify-center items-center"
-                      >
-                        <span className="mr-1">SHOP THE DROP</span>{" "}
-                        <LeftArrow color="black" />
-                      </a>
-                    )}
-                    <LeftArrow color="black" />
-                  </button>
-                )}
-              </div>
+              {scoreCount >= 10 && (
+                <div className="w-full flex flex-col justify-center items-center px-2 m-auto">
+                  {!submitted ? (
+                    <input
+                      required
+                      type="text"
+                      placeholder="YOUR INITIALS*"
+                      value={!submitted ? name : "SCORE RECORDED"}
+                      onChange={handleNameChange}
+                      onFocus={handleFocus}
+                      maxLength={3}
+                      onBlur={handleBlur}
+                      className={`text-2xl placeholder-black ${
+                        scoreCount >= 10 ? "bg-[#C9C3AD]" : "bg-white"
+                      } rounded-[5px] px-2 py-2 mb-2 w-full uppercase ${
+                        error ? "text-red-600" : "text-black"
+                      } ${submitted && "text-[#C97900] pointer-events-none"}`}
+                    />
+                  ) : (
+                    ""
+                  )}
+                  {!submitted ? (
+                    <input
+                      required
+                      type="text"
+                      placeholder="YOUR EMAIL*"
+                      value={!submitted ? email : "SCORE RECORDED"}
+                      onChange={handleEmailChange}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      className={`text-2xl placeholder-black ${
+                        scoreCount >= 10 ? "bg-[#C9C3AD]" : "bg-white"
+                      } rounded-[5px] px-2 py-2 w-full uppercase ${
+                        emailError || isEmailEmpty ? "text-black" : "text-black"
+                      } ${submitted && "text-[#C97900] pointer-events-none"}`}
+                    />
+                  ) : (
+                    ""
+                  )}
+
+                  {emailError && (
+                    <div className="pt-2 text-black">{emailError}</div>
+                  )}
+
+                  {tapCount >= 10 && (
+                    <button
+                      onClick={handleSaveScore}
+                      disabled={isNameEmpty || submitting} // disable button if name is empty or submitting
+                      className={`bg-white border border-white border-solid text-black font-GroteskRegular text-xl w-full rounded-[5px] my-2  py-2 flex flex-row justify-center items-center ${
+                        error || submitting
+                          ? "opacity-50 pointer-events-none"
+                          : "opacity-100"
+                      }`}
+                    >
+                      {!submitted ? (
+                        <span className="mr-1 font-GroteskMedium">
+                          SUBMIT SCORE
+                        </span>
+                      ) : (
+                        <a
+                          href="https://banditrunning.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`text-black font-GroteskRegular ${
+                            submitted ? "" : "py-2"
+                          } text-xl w-full rounded-[5px] flex flex-row justify-center items-center`}
+                        >
+                          <span className="mr-1">SHOP THE DROP</span>{" "}
+                          <LeftArrow color="black" />
+                        </a>
+                      )}
+                      {!submitted && <LeftArrow color="black" />}
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
-            <button
-              onClick={handleButtonClick}
-              className="border border-white border-solid text-white font-GroteskRegular py-2 text-xl px-4 w-full rounded-[5px] my-2 flex flex-row justify-center items-center"
-            >
-              <span className="mr-1">PLAY AGAIN</span> <LeftArrow />
-            </button>
+            {scoreCount < 10 && (
+              <button
+                onClick={handleButtonClick}
+                className="border border-white border-solid text-white font-GroteskRegular text-xl px-4 w-full rounded-[5px] my-2 flex flex-row justify-center items-center"
+              >
+                <span className="mr-1 py-2">PLAY AGAIN</span> <LeftArrow />
+              </button>
+            )}
           </div>
         </>
       ) : (

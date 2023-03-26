@@ -187,7 +187,6 @@ function Model({
                     color: "#d4af37",
                     roughness: 0,
                     metalness: 1,
-                    shininess: 1,
                   })
                 : materials.White
             }
@@ -202,7 +201,6 @@ function Model({
                     color: "#E2BF36",
                     roughness: 0,
                     metalness: 1,
-                    shininess: 1,
                   })
                 : materials.Black
             }
