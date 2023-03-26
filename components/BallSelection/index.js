@@ -151,7 +151,7 @@ const BallSelection = ({ balls, rotation }) => {
           justifyContent: "center",
         }}
       >
-        {selectedBallIndex === 1 ? "HOME" : "AWAY"}
+        {selectedBallIndex === 1 ? "AWAY" : "HOME"}
       </div>
     </div>
   );

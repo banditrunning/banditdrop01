@@ -124,7 +124,7 @@ const YouBoard = ({
                     {title}
                   </div>
                   {submitted && (
-                    <Link href={"/Leaderboard"}>
+                    <Link href={"../Leaderboard"}>
                       <div className="text-sm text-[#C97900] font-GroteskRegular bg-black uppercase font-GroteskMedium flex flex-row items-center justify-between rounded-[2px] px-2 active:opacity:75">
                         VIEW SCOREBOARD <LeftArrow size={14} color="#C97900" />
                       </div>

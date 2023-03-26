@@ -116,13 +116,14 @@ const Cover: React.FC = () => {
 
     const MarqueeMessage = () => (
       <span className="px-2 flex flex-row justify-between items-center text-2xl">
-        TAP TO START <LeftArrow />
+        TAP TO PLAY
+        <LeftArrow />
       </span>
     );
     return (
       <>
         <div
-          className={`font-GroteskRegular text-white uppercase text-7xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden px-4 ${
+          className={`font-GroteskRegular text-white uppercase text-7xl leading-[3.9rem] pt-4 fixed top-14 overflow-hidden px-4 ${
             showContent
               ? "opacity-100 transition-opacity duration-1000 ease-in"
               : "opacity-0"
@@ -130,10 +131,12 @@ const Cover: React.FC = () => {
         >
           <div>How&apos;s</div>
           <div>Your</div>
-          <div>Juggle?</div>
-          <div className=" py-3 font-GroteskRegular text-white uppercase text-lg leading-[1.2rem] text-[#767676]">
-            <div>Beat the High Score.</div>
-            <div>Unlock early drop access.</div>
+          <div>Touch?</div>
+          <div className=" py-3 font-GroteskRegular text-white uppercase text-[16px] leading-[1rem]">
+            <div className="text-[#767676]">Get 10 juggles</div>
+            <div className="text-[#767676] mb-1">Unlock the drop</div>
+            <div>High score Sunday 11:59pm est</div>
+            <div>wins one of everything</div>
           </div>
         </div>
         <div
@@ -215,7 +218,7 @@ const Cover: React.FC = () => {
 
     return (
       <>
-        <Header text="Pick Your Poison" />
+        <Header text="CHOOSE YOUR SIDE" />
         <BallSelection balls={balls} rotation={[0, Math.PI / 2, 0]} />
       </>
     );
@@ -247,7 +250,7 @@ const Cover: React.FC = () => {
 
     const MarqueeMessage = () => (
       <span className="px-2 flex flex-row justify-between items-center text-2xl">
-        TAP TO START <LeftArrow />
+        TAP TO PLAY <LeftArrow />
       </span>
     );
     return (
