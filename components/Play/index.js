@@ -205,7 +205,6 @@ const ThreeScene = ({
                 clickable
                 setTapCount={setTapCount}
                 tapCount={tapCount}
-                updatedCount={collisionCount}
               />
             )}
             <Ground position={groundPosition} />
