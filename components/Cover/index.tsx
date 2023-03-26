@@ -133,10 +133,12 @@ const Cover: React.FC = () => {
           <div>Your</div>
           <div>Touch?</div>
           <div className=" py-3 font-GroteskRegular text-white uppercase text-[16px] leading-[1rem]">
-            <div className="text-[#767676]">Get 10 juggles</div>
-            <div className="text-[#767676] mb-1">Unlock the drop</div>
-            <div>High score Sunday 11:59pm est</div>
-            <div>wins one of everything</div>
+            <div className="text-[#ffffff] mb-1">
+              Get 10 juggles Unlock the drop
+            </div>
+            <div className="text-[#767676]">
+              High score Sunday 11:59pm est wins one of everything
+            </div>
           </div>
         </div>
         <div
