@@ -96,41 +96,46 @@ function Model({
 
   const bind = useGesture(
     {
+      onPointerDown: () => {
+        console.log("onPointerDown called");
+      },
       onPointerUp: () => {
         console.log("onPointerUp called");
-        {
-          gameState === "home" && tapHandler();
-        }
 
+        // Existing code
         if (api) {
           // check if api is defined
-
-          {
-            gameState === "home"
-              ? api.velocity.set(0, 4, 0)
-              : api.velocity.set(0, 4, 0);
+          if (gameState === "home") {
+            api.velocity.set(0, 6, 0);
+          } else {
+            api.velocity.set(0, 4, 0);
           }
-
-          {
-            (tapCount < 10 && playKickSound()) ||
-              (tapCount >= 10 &&
-                gameState === "gameplay" &&
-                gameOver === false &&
-                playMetalKickSound());
-          } // play the kick sound effect
-
-          {
-            gameState === "home" && playKickSound();
+          if (tapCount < 10) {
+            playKickSound();
+          } else if (
+            tapCount >= 10 &&
+            gameState === "gameplay" &&
+            gameOver === false
+          ) {
+            playMetalKickSound();
+          }
+          if (gameState === "home") {
+            playKickSound();
+            tapHandler();
           }
         }
-
-        // Increment the tap count and store it locally
-        {
-          gameState === "gameplay" && setTapCount(tapCount + 1);
+        if (gameState === "gameplay") {
+          setTapCount(tapCount + 1);
         }
       },
     },
-    1000 / 60
+    {
+      // Set passive: true to improve scrolling performance
+      // and prevent default touch behavior
+      passive: true,
+      // Enable pointer events for both touch and mouse input
+      pointerEvents: { touch: true, mouse: true },
+    }
   );
 
   const [angularVelocity, setAngularVelocity] = useState([0, 0, 0]);

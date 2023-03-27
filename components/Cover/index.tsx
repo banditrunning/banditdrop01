@@ -140,7 +140,7 @@ const Cover: React.FC = () => {
           </div>
         </div>
         <div
-          className={`w-full fixed bottom-[-100%] left-0 right-0 z-[101] ${
+          className={`w-full fixed bottom-[-100%] left-0 right-0 z-[10000] ${
             showMarquee ? "marquee-show-animation duration-500 ease-out" : ""
           }`}
           onClick={handleScreenTap}
