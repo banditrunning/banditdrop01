@@ -32,7 +32,7 @@ export default function Layout(props: { children: any }) {
   return (
     <div className="relative">
       <div
-        className="w-14 h-14 rounded-full bg-white absolute -top-4 -left-4 opacity-100 transition-opacity pointer-events-none cursor-none z-[100000]"
+        className="w-14 h-14 rounded-full bg-transparent md:bg-white absolute -top-4 -left-4 opacity-100 transition-opacity pointer-events-none cursor-none z-[100000]"
         ref={cursorRef}
         style={{ cursor: "none" }}
       ></div>
