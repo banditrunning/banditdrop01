@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import Symbol from "../Symbol";
 import GameContext from "@/context";
 import RightArrow from "@/components/RightArrow";
-import Countdown from "./countdown";
+import Countdown from "./Countdown";
 
 export default function Header(props: { showContent: boolean }) {
   const { showContent } = props;
