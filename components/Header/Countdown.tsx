@@ -37,7 +37,7 @@ const Countdown = () => {
           <div className="">{days.toString().padStart(2, "0")}:</div>
           <div className="">{hours.toString().padStart(2, "0")}:</div>
           <div className="">{minutes.toString().padStart(2, "0")}:</div>
-          <div>{seconds.toString().padStart(2, "0")}</div>
+          <div>{seconds.toString().padStart(2, "0")};</div>
         </div>
       </Link>
     </>
