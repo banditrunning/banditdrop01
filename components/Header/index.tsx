@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import Symbol from "../Symbol";
 import GameContext from "@/context";
 import RightArrow from "@/components/RightArrow";
+import Countdown from "./countdown";
 
 export default function Header(props: { showContent: boolean }) {
   const { showContent } = props;
@@ -18,11 +19,11 @@ export default function Header(props: { showContent: boolean }) {
   return (
     <div
       className={`${
-        gameState === "gameplay" ? "bg-none" : "bg-black"
-      } fixed top-0 left-0 right-0 border-b border-solid border-white z-[101]`}
+        gameState === "gameplay" ? "bg-none z-[99]" : "bg-black z-[101]"
+      } fixed top-0 left-0 right-0`}
     >
       <div
-        className={`flex flex-row w-full items-center justify-between pt-6 pb-4 px-4 ${
+        className={`flex flex-row w-full items-center justify-between py-4 px-4 border-b border-solid border-white ${
           showContent
             ? "opacity-100 transition-opacity duration-1000 ease-in"
             : "opacity-0"
@@ -35,6 +36,9 @@ export default function Header(props: { showContent: boolean }) {
             <RightArrow size={24} />
           </div>
         )}
+        <span className="text-xl text-black font-GroteskRegular">
+          <Countdown />
+        </span>
       </div>
     </div>
   );

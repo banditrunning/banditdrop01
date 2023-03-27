@@ -3,5 +3,9 @@ import Cover from "@/components/Cover";
 import LeaderboardPanel from "@/components/LeaderboardPanel";
 
 export default function Home() {
-  return <Cover />;
+  return (
+    <div>
+      <Cover />
+    </div>
+  );
 }

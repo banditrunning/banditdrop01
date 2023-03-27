@@ -54,72 +54,6 @@ const Ground = (props) => {
   );
 };
 
-const LeftBumper = (props) => {
-  const { size } = useThree();
-  const aspect = size.width / size.height;
-  const [positionY, setPositionY] = useState(-2.75);
-  const [ref] = usePlane(() => ({
-    rotation: [-Math.PI / 2, 0, -Math.PI / 2],
-    position: [-aspect * 3, positionY, 0],
-    material: { restitution: 1 },
-    ...props,
-  }));
-
-  useEffect(() => {
-    const setGroundPosition = () => {
-      const aspectRatio = window.innerWidth / window.innerHeight;
-      setPositionY(-aspectRatio * 3);
-    };
-
-    setGroundPosition();
-    window.addEventListener("resize", setGroundPosition);
-
-    return () => {
-      window.removeEventListener("resize", setGroundPosition);
-    };
-  }, []);
-
-  return (
-    <mesh ref={ref} receiveShadow>
-      <planeBufferGeometry attach="geometry" args={[100, 100]} />
-      <shadowMaterial attach="material" transparent opacity={0.5} />
-    </mesh>
-  );
-};
-
-const RightBumper = (props) => {
-  const { size } = useThree();
-  const aspect = size.width / size.height;
-  const [positionY, setPositionY] = useState(-2.75);
-  const [ref] = usePlane(() => ({
-    rotation: [-Math.PI / 2, 0, Math.PI / 2],
-    position: [aspect * 3, positionY, 0],
-    material: { restitution: 0.4 },
-    ...props,
-  }));
-
-  useEffect(() => {
-    const setGroundPosition = () => {
-      const aspectRatio = window.innerWidth / window.innerHeight;
-      setPositionY(-aspectRatio * 3);
-    };
-
-    setGroundPosition();
-    window.addEventListener("resize", setGroundPosition);
-
-    return () => {
-      window.removeEventListener("resize", setGroundPosition);
-    };
-  }, []);
-
-  return (
-    <mesh ref={ref} receiveShadow>
-      <planeBufferGeometry attach="geometry" args={[100, 100]} />
-      <meshPhongMaterial attach="material" color={"#393939"} />
-    </mesh>
-  );
-};
-
 const CameraControls = () => {
   const {
     camera,
@@ -164,7 +98,8 @@ const ThreeScene = ({ isClient }) => {
 
   const groundY = distanceToBottom * aspect;
   const offsetY = 3;
-  const groundPosition = [0, -groundY + offsetY, 0];
+  const groundPosition =
+    window.innerWidth < 768 ? [0, -groundY + offsetY, 0] : [0, -1.25, 0];
 
   const [constantRotation, setConstantRotation] = useState(
     new THREE.Vector3(0, 0, 0)
@@ -190,7 +125,7 @@ const ThreeScene = ({ isClient }) => {
         right: "0",
         bottom: "0",
         width: "100%",
-        zIndex: "100",
+        zIndex: "1000",
       }}
     >
       <Canvas
@@ -218,8 +153,6 @@ const ThreeScene = ({ isClient }) => {
               <Model position={modelPosition} tapHandler={tapHandler} />
             )}
             <Ground position={groundPosition} />
-            <LeftBumper />
-            <RightBumper />
           </Physics>
           <Environment preset="city" background={false} />
         </Suspense>
@@ -240,7 +173,11 @@ const BallGame = () => {
     return null;
   }
 
-  return <ThreeScene isClient={isClient} />;
+  return (
+    <div className="z-[10000]">
+      <ThreeScene isClient={isClient} />
+    </div>
+  );
 };
 
 export default BallGame;

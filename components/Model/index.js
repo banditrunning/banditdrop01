@@ -107,7 +107,7 @@ function Model({
 
           {
             gameState === "home"
-              ? api.velocity.set(0, 10, 0)
+              ? api.velocity.set(0, 4, 0)
               : api.velocity.set(0, 4, 0);
           }
 
@@ -115,6 +115,7 @@ function Model({
             (tapCount < 10 && playKickSound()) ||
               (tapCount >= 10 &&
                 gameState === "gameplay" &&
+                gameOver === false &&
                 playMetalKickSound());
           } // play the kick sound effect
 

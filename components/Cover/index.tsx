@@ -123,20 +123,18 @@ const Cover: React.FC = () => {
     return (
       <>
         <div
-          className={`font-GroteskRegular text-white uppercase text-7xl leading-[3.9rem] pt-4 fixed top-14 overflow-hidden px-4 ${
+          className={`font-GroteskRegular text-white uppercase text-7xl md:text-9xl leading-[3.9rem] pt-4 fixed top-14 overflow-hidden px-4 z-[1000] md:z-[10000] ${
             showContent
               ? "opacity-100 transition-opacity duration-1000 ease-in"
               : "opacity-0"
           }`}
         >
-          <div>How&apos;s</div>
-          <div>Your</div>
-          <div>Touch?</div>
-          <div className=" py-3 font-GroteskRegular text-white uppercase text-[16px] leading-[1rem]">
-            <div className="text-[#ffffff] mb-1">
-              Get 10 juggles Unlock the drop
+          <div className="max-w-lg leading-[.9em]">How&apos;s Your Touch?</div>
+          <div className="py-3 font-GroteskRegular text-white uppercase text-[16px] leading-[1rem]">
+            <div className="text-[#ffffff] mb-1 md:text-3xl md:leading-[2rem]">
+              Get 10 juggles, Unlock the drop
             </div>
-            <div className="text-[#767676] max-w-[300px]">
+            <div className="text-[#767676] max-w-[290px] md:max-w-lg md:text-3xl md:leading-[2rem]">
               High score Sunday 11:59pm est wins one of everything
             </div>
           </div>
@@ -175,7 +173,9 @@ const Cover: React.FC = () => {
           }
         `}</style>
         <div onClick={handleScreenTap}></div>
-        <BallGame />
+        <div className="z-[10000]">
+          <BallGame />
+        </div>
       </>
     );
   };
@@ -205,7 +205,7 @@ const Cover: React.FC = () => {
     const Header = memo(function Header({ text }: { text: string }) {
       return (
         <div
-          className={`font-GroteskRegular text-white uppercase text-6xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden px-4 ${
+          className={`font-GroteskRegular text-white uppercase text-6xl md:text-9xl leading-[3.9rem] py-4 fixed top-14 overflow-hidden px-4 ${
             text
               ? "opacity-100 transition-opacity duration-500 ease-in"
               : "opacity-0"
@@ -291,7 +291,7 @@ const Cover: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="">
       {gameState === "home" && <Home />}
       {gameState === "selection" && (
         <Selection

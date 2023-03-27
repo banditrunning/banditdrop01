@@ -78,6 +78,22 @@ function Model({
   }, [ref, onCollide]);
 
   const refCurrent = ref.current;
+  const tapTargetRef = useRef();
+  const [tapTargetRadius, setTapTargetRadius] = useState(
+    scaledBallRadius * 1.1
+  );
+  useEffect(() => {
+    tapTargetRef.current.geometry = new THREE.SphereBufferGeometry(
+      tapTargetRadius,
+      32,
+      32
+    );
+    tapTargetRef.current.material.transparent = true;
+    tapTargetRef.current.material.opacity = 0;
+    tapTargetRef.current.renderOrder = 9999;
+    tapTargetRef.current.position.copy(ref.current.position);
+  }, [tapTargetRadius, ref]);
+
   const bind = useGesture(
     {
       onPointerUp: () => {
@@ -91,14 +107,15 @@ function Model({
 
           {
             gameState === "home"
-              ? api.velocity.set(0, 10, 0)
+              ? api.velocity.set(0, 4, 0)
               : api.velocity.set(0, 4, 0);
           }
 
           {
-            (tapCount < 20 && playKickSound()) ||
-              (tapCount > 20 &&
+            (tapCount < 10 && playKickSound()) ||
+              (tapCount >= 10 &&
                 gameState === "gameplay" &&
+                gameOver === false &&
                 playMetalKickSound());
           } // play the kick sound effect
 
@@ -151,62 +168,63 @@ function Model({
   }, [api, angularVelocity, inAir, ref, scaledBallRadius]);
 
   return (
-    <group
-      ref={ref}
-      dispose={null}
-      position={[-center.x, -center.y, -center.z]}
-      scale={gameState === "selection" ? [0.3, 0.3, 0.3] : [0.25, 0.25, 0.25]}
-      {...bind()}
-    >
-      <group position={[0, 0, -0.01]} rotation={[0, 0, 0.9]}>
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Solid.geometry}
-          material={
-            tapCount >= 20
-              ? new MeshStandardMaterial({
-                  color: "#d4af37",
-                  roughness: 0,
-                  metalness: 1,
-                  shininess: 1,
-                })
-              : materials.Black
-          }
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Solid_1.geometry}
-          material={
-            tapCount >= 20
-              ? new MeshStandardMaterial({
-                  color: "#E2BF36",
-                  roughness: 0,
-                  metalness: 1,
-                  shininess: 1,
-                })
-              : materials.White
-          }
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Solid_2.geometry}
-          material={materials.Stiches}
-        />
+    <>
+      <mesh ref={tapTargetRef} />
+      <group
+        ref={ref}
+        dispose={null}
+        position={[-center.x, -center.y, -center.z]}
+        scale={gameState === "selection" ? [0.3, 0.3, 0.3] : [0.25, 0.25, 0.25]}
+        {...bind()}
+      >
+        <group position={[0, 0, -0.01]} rotation={[0, 0, 0.9]}>
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Solid.geometry}
+            material={
+              tapCount >= 10
+                ? new MeshStandardMaterial({
+                    color: "#d4af37",
+                    roughness: 0,
+                    metalness: 1,
+                  })
+                : materials.Black
+            }
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Solid_1.geometry}
+            material={
+              tapCount >= 10
+                ? new MeshStandardMaterial({
+                    color: "#E2BF36",
+                    roughness: 0,
+                    metalness: 1,
+                  })
+                : materials.White
+            }
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Solid_2.geometry}
+            material={materials.Stiches}
+          />
 
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Curve.geometry}
-          material={tapCount >= 20 ? materials.White : materials.Black}
-          position={[-0.65194738, 1.03521895, 0]}
-          rotation={[0, Math.PI / 2, 0]}
-          scale={0.37675896}
-        />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes.Curve.geometry}
+            material={tapCount >= 10 ? materials.White : materials.Black}
+            position={[-0.65194738, 1.03521895, 0]}
+            rotation={[0, Math.PI / 2, 0]}
+            scale={0.37675896}
+          />
+        </group>
       </group>
-    </group>
+    </>
   );
 }
 useGLTF.preload("../models/Football.glb");

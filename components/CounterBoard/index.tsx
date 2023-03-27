@@ -4,6 +4,9 @@ import LeftArrow from "../LeftArrow";
 import GraphemeSplitter from "grapheme-splitter";
 import Link from "next/link";
 import GameContext from "@/context";
+import Image from "next/image";
+import Locked from "./locked";
+import Unlocked from "./unlocked";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -109,6 +112,13 @@ const YouBoard = ({
       {gameOver === true ? (
         <>
           <div className="z-[101] relative left-0 right-0">
+            <div className="pl-3 py-2 text-5xl text-white font-groteskRegular mb-2 uppercase">
+              {scoreCount >= 10 && submitted
+                ? "You're in"
+                : scoreCount >= 10
+                ? "You've done it!"
+                : "Try again"}
+            </div>
             <div
               className={`w-full flex flex-col items-center justify between w-full ${
                 scoreCount >= 10 ? "bg-[#C97900]" : "bg-[#808080]"
@@ -121,23 +131,39 @@ const YouBoard = ({
                       scoreCount >= 10 ? "text-black" : "bg-none text-white"
                     } uppercase font-GroteskMedium`}
                   >
-                    {title}
+                    {submitted ? "" : title}
                   </div>
-                  {submitted && (
-                    <Link href={"../Leaderboard"}>
-                      <div className="text-sm text-[#C97900] font-GroteskRegular bg-black uppercase font-GroteskMedium flex flex-row items-center justify-between rounded-[2px] px-2 active:opacity:75">
-                        VIEW SCOREBOARD <LeftArrow size={14} color="#C97900" />
-                      </div>
-                    </Link>
-                  )}
                 </div>
-                <div
-                  className={`${
-                    scoreCount >= 10 ? "bg-[#C9C3AD]" : "bg-white"
-                  } text-black font-GroteskRegular rounded-[5px] px-1 text-7xl rounded-[5px]`}
-                >
-                  {gameOver ? scoreCount : tapCount}
-                </div>
+                {!submitted ? (
+                  <div
+                    className={`${
+                      scoreCount >= 10 ? "bg-[#C9C3AD]" : "bg-white"
+                    } text-black font-GroteskRegular rounded-[5px] px-1 text-7xl rounded-[5px]`}
+                  >
+                    {gameOver ? scoreCount : tapCount}
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "300px",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Image
+                      src="/static/textures/away_texture.png"
+                      alt="Away Texture"
+                      style={{
+                        objectFit: "cover",
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                      }}
+                      width={1400}
+                      height={1400}
+                    />
+                  </div>
+                )}
               </div>
               {scoreCount >= 10 && (
                 <div className="w-full flex flex-col justify-center items-center px-2 m-auto">
@@ -164,12 +190,13 @@ const YouBoard = ({
                     <input
                       required
                       type="text"
+                      autoComplete="email"
                       placeholder="YOUR EMAIL*"
                       value={!submitted ? email : "SCORE RECORDED"}
                       onChange={handleEmailChange}
                       onFocus={handleFocus}
                       onBlur={handleBlur}
-                      className={`text-2xl placeholder-black ${
+                      className={`appearance-none text-2xl placeholder-black ${
                         scoreCount >= 10 ? "bg-[#C9C3AD]" : "bg-white"
                       } rounded-[5px] px-2 py-2 w-full uppercase ${
                         emailError || isEmailEmpty ? "text-black" : "text-black"
@@ -216,14 +243,13 @@ const YouBoard = ({
                 </div>
               )}
             </div>
-            {scoreCount < 10 && (
-              <button
-                onClick={handleButtonClick}
-                className="border border-white border-solid text-white font-GroteskRegular text-xl px-4 w-full rounded-[5px] my-2 flex flex-row justify-center items-center"
-              >
-                <span className="mr-1 py-2">PLAY AGAIN</span> <LeftArrow />
-              </button>
-            )}
+
+            <button
+              onClick={handleButtonClick}
+              className="border border-white border-solid text-white font-GroteskRegular text-xl px-4 w-full rounded-[5px] my-2 flex flex-row justify-center items-center"
+            >
+              <span className="mr-1 py-2">PLAY AGAIN</span> <LeftArrow />
+            </button>
           </div>
         </>
       ) : (
@@ -247,10 +273,15 @@ const YouBoard = ({
               </span>
             ) : (
               <>
-                <span>
-                  {tapCount}
-                  {tapCount < 10 && <span className="text-[#c7c7c7]">/10</span>}
-                </span>
+                <div className="flex flex-row items-center justify-between w-full pr-1">
+                  <span>
+                    {tapCount}
+                    {tapCount < 10 && (
+                      <span className="text-[#c7c7c7]">/10</span>
+                    )}
+                  </span>
+                  <span>{tapCount >= 10 ? <Unlocked /> : <Locked />}</span>
+                </div>
               </>
             )}
           </div>
@@ -275,7 +306,7 @@ const HighScore = ({ score, highScorer }: ScoreProps) => {
       </div>
       <div className="text-4xl text-black font-GroteskRegular bg-[#C4A6A8] rounded-[5px] px-1 flex flex-row items-center justify-between">
         {score ?? 0}
-        <span className="text-lg bg-[#BF3E2B] text-white rounded-[5px] px-2 py-1 opacity-50">
+        <span className="text-lg bg-[#BF3E2B] text-white rounded-[5px] px-2 py-1 opacity-50 uppercase">
           {truncatedScorer}
         </span>
       </div>
@@ -328,7 +359,7 @@ const CounterBoard = ({
       ) : (
         <YouBoard
           tapCount={tapCount}
-          title="Final Score"
+          title={"Final Score"}
           gameOver={gameOver}
           setGameOver={setGameOver}
           setTapCount={setTapCount}

@@ -119,7 +119,8 @@ const ThreeScene = ({
 
   const groundY = distanceToBottom * aspect;
   const offsetY = 1;
-  const groundPosition = [0, -groundY + offsetY, 0];
+  const groundPosition =
+    window.innerWidth < 768 ? [0, -groundY + offsetY, 0] : [0, -1.0, 0];
 
   const tapCountRef = useRef(0);
 
@@ -168,7 +169,7 @@ const ThreeScene = ({
         right: "0",
         bottom: "0",
         width: "100%",
-        zIndex: "100",
+        zIndex: gameOver ? "1000" : "90",
       }}
     >
       <Canvas
@@ -236,7 +237,7 @@ const Play = ({ ball }) => {
   }
 
   {
-    tapCount === 20 && playPowerUp();
+    tapCount === 10 && gameOver === false && playPowerUp();
   }
 
   return (
