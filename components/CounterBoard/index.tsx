@@ -63,7 +63,6 @@ const YouBoard = ({
   const { setGameState } = useContext(GameContext);
 
   const handleSaveScore = async () => {
-    console.log("handleSaveScore called");
     setSubmitting(true);
     if (email.trim() === "") {
       setEmailError("ENTER A VALID EMAIL");
@@ -81,9 +80,7 @@ const YouBoard = ({
       .insert([{ name: name, email: email, tapCount: scoreCount }]);
     setSubmitting(false);
     if (error) {
-      console.error(error);
     } else {
-      console.log(data);
       setSubmitted(true);
     }
   };

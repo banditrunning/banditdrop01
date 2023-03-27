@@ -96,12 +96,8 @@ function Model({
 
   const bind = useGesture(
     {
-      onPointerDown: () => {
-        console.log("onPointerDown called");
-      },
+      onPointerDown: () => {},
       onPointerUp: () => {
-        console.log("onPointerUp called");
-
         // Existing code
         if (api) {
           // check if api is defined
