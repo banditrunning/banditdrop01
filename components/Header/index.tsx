@@ -36,7 +36,7 @@ export default function Header(props: { showContent: boolean }) {
             <RightArrow size={24} />
           </div>
         )}
-        <span className="text-xl text-black font-GroteskRegular">
+        <span className="text-xl text-black font-GroteskRegular z-[101]">
           <Countdown />
         </span>
       </div>
