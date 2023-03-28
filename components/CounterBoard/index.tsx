@@ -140,16 +140,9 @@ const YouBoard = ({
                     {gameOver ? scoreCount : tapCount}
                   </div>
                 ) : (
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "300px",
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                  >
+                  <div className="w-full h-[300px] md:h-[400px] flex justify-center">
                     <Image
-                      src="/static/textures/away_texture.png"
+                      src="/static/textures/away_texture.jpg"
                       alt="Away Texture"
                       style={{
                         objectFit: "cover",

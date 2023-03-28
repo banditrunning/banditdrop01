@@ -32,7 +32,7 @@ const Countdown = () => {
 
   return (
     <>
-      <Link href={"../leaderboard"}>
+      <Link href={"../Leaderboard"}>
         <div className="flex items-center justify-center text-center bg-[#C97900] px-2 py-[0.5px] rounded-[5px]">
           <div className="">{days.toString().padStart(2, "0")}:</div>
           <div className="">{hours.toString().padStart(2, "0")}:</div>
