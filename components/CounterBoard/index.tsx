@@ -82,6 +82,7 @@ const YouBoard = ({
     if (error) {
     } else {
       setSubmitted(true);
+      localStorage.setItem("access", "true");
     }
   };
 
@@ -216,7 +217,7 @@ const YouBoard = ({
                         </span>
                       ) : (
                         <a
-                          href="https://banditrunning.com"
+                          href="https://banditrunning.com/collections/bandit-r-c-soccer-capsule"
                           target="_blank"
                           rel="noopener noreferrer"
                           className={`text-black font-GroteskRegular ${
