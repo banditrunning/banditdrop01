@@ -24,8 +24,7 @@ const LeaderboardPanel = () => {
       const { data: scores, error } = await supabase
         .from("scores")
         .select("name, tapCount, created_at")
-        .order("tapCount", { ascending: false })
-        .limit(15);
+        .order("tapCount", { ascending: false });
       if (error) {
         console.error(error);
       } else {
