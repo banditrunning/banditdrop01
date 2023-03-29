@@ -337,7 +337,7 @@ const CounterBoard = ({
   return (
     <>
       {gameOver === false ? (
-        <div className="w-full flex flex-row justify-between items-center m-auto w-full">
+        <div className="w-full flex flex-row justify-between items-center m-auto w-[94%] md:w-[98%]">
           <YouBoard
             tapCount={tapCount}
             title="You"
