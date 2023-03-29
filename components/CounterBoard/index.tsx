@@ -118,7 +118,7 @@ const YouBoard = ({
                 : "Try again"}
             </div>
             <div
-              className={`w-full flex flex-col items-center justify between w-full ${
+              className={`w-full flex flex-col items-center justify-between w-full ${
                 scoreCount >= 10 ? "bg-[#C97900]" : "bg-[#808080]"
               } rounded-md p-2`}
             >
@@ -337,7 +337,7 @@ const CounterBoard = ({
   return (
     <>
       {gameOver === false ? (
-        <div className="w-full flex flex-row justify-between items-center m-auto w-[94%] md:w-[98%]">
+        <div className="flex flex-row justify-between items-center m-auto w-[94%] md:w-[98%]">
           <YouBoard
             tapCount={tapCount}
             title="You"
