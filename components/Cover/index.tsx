@@ -123,14 +123,14 @@ const Cover: React.FC = () => {
     return (
       <>
         <div
-          className={`font-GroteskRegular text-white uppercase text-7xl md:text-9xl leading-[3.9rem] pt-4 fixed top-14 overflow-hidden px-4 z-[1000] md:z-[10000] ${
+          className={`font-GroteskRegular text-white uppercase text-7xl md:text-9xl leading-[3.9rem] pt-4 fixed top-14 overflow-hidden px-4 z-[100000] md:z-[10000] ${
             showContent
               ? "opacity-100 transition-opacity duration-1000 ease-in"
               : "opacity-0"
           }`}
         >
           <div className="max-w-lg leading-[.9em]">How&apos;s Your Touch?</div>
-          <div className="py-3 font-GroteskRegular text-white uppercase text-[16px] leading-[1rem]">
+          <div className="py-3 font-GroteskRegular text-white uppercase text-[24px] leading-[1.5rem] tracking-[1px]">
             <div className="text-[#ffffff] mb-1 md:text-3xl md:leading-[2rem]">
               Get 10 juggles, Unlock the drop
             </div>
