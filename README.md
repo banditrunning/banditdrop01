@@ -2,7 +2,7 @@
 
 # BANDIT RC
 
-The GPR landing page is the front-end of the Greenpoint Runners digital presence hosted at [greenpointrunners.com](https://greenpointrunners.com) – Built by **BanditLabs**. 
+Bandit RC is a gated-access to the Banditrunning.com shopify site. [banditdrop01.vercel.app](banditdrop01.vercel.app) – Built by **BanditLabs**. 
 
 ## Quickstart
 
