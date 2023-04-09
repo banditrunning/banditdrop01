@@ -2,7 +2,7 @@
 
 # BANDIT RC
 
-Bandit RC is a gated-access to the Banditrunning.com shopify site. [banditdrop01.vercel.app](Bandit-rc.com) – Built by **BanditLabs**. 
+Bandit RC is a gated-access to the Banditrunning.com shopify site. [bandit-rc.com](banditdrop01.vercel.app) – Built by **BanditLabs**. 
 
 ## Quickstart
 
